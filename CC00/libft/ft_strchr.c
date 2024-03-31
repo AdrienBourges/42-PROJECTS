@@ -2,7 +2,7 @@
 
 char	*ft_strchr(const char *s, int c)
 {
-	while (*s != c)
+	while (*s != (char)c)
 	{
 		if (!*s)
 			return (0);
@@ -10,3 +10,4 @@ char	*ft_strchr(const char *s, int c)
 	}
 		return ((char *)s);
 }
+

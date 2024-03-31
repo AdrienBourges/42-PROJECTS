@@ -10,12 +10,12 @@ char	*ft_strrchr(const char *s, int c)
 		s++;
 		len++;
 	}
-	while (len > 0 && *s != c)
+	while (len > 0 && *s != (char)c)
 	{
 		s--;
 		len--;
 	}
-	if (*s == c)
+	if (*s == (char)c)
 		return ((char *)s);
 	return (NULL);
 }
