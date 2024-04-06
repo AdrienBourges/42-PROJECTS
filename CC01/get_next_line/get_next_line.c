@@ -47,7 +47,7 @@ char *ft_merge(char *s1, char *s2)
 	size_t	total_size;
 	int		i;
 	int		j;
-	
+
 	if (!s1)
 	{
 		result = ft_strdup(s2);
@@ -114,7 +114,7 @@ char *ft_append_line(char *line) // fonction qui sert a ajouter la ligne dans un
 		result[i] = line[i];
 		i++;
 	}
-	if (line[i + 1])
+	if (line[i] == '\n')
 	{
 		result[i] = '\n';
 		result[i + 1] = '\0';
@@ -142,6 +142,12 @@ char *ft_clear_line(char *str_temp) // fonction pour clean le static string jusq
 	{
 		j++;
 	}
+	if (i == j)
+	{
+		free(str_temp);
+		return (NULL);
+	}
+
 	result = malloc (j - i + 1);
 	j = 0;
 	while (str_temp[i])
@@ -165,83 +171,29 @@ char *get_next_line(int fd)
 	str_temp = ft_stock_text(fd, str_temp);
 	result = ft_append_line(str_temp);
 	str_temp = ft_clear_line(str_temp);
-	//if (!*str_temp)
-	//	free(str_temp);
-	//if (read(fd, str_temp, BUFFER_SIZE) == 0)
-	//		free(str_temp);
 	return (result);
-
-
-
-	/* char *get_next_line(int fd)
-	   {
-	   int read_check;
-	   char *result;
-	   static char *temp;
-	   int i;
-	   int j;
-
-	   temp = malloc (BUFFER_SIZE + 1);
-	   if (!temp)
-	   return (NULL);
-	   read_check = read(fd, temp, BUFFER_SIZE);
-	j = 0;
-	   temp[read_check] = '\0';
-	   while (temp[i] != '\n' && i < read_check)
-	   {
-	   i++;
-	   }
-	   if (temp[i] == '\n' || (i < BUFFER_SIZE && temp[i] == '\0')) // 2e condition qui sert a check si on est bien a EOF et qu'on a pas juste rencontrer la limite de la BUFFER SIZE
-	   {
-	   result = malloc(i + 2);
-	   if (!result)
-	   return (NULL);
-	   while (i > j)
-	   {
-	   result[j] = temp[j];
-	   j++;
-	   }
-	   result[j] = '\0';
-	   }
-
-	   return (result);
-	   */
-
-
-	/*
-	   while (read_check != 0 && result[read_check] != '\n')
-	   {
-	   read_check = read(fd, result, BUFFER_SIZE);
-	   if (read_check == -1)
-	   {
-	   free(result);
-	   return (NULL);
-	   }
-	//result[read_check] = '\0';
-	}
-	//	result[read_check] = '\n';
-	//	result[read_check + 1] = '\0';
-	return (result);
-	*/
 }
+
+
+
 
 #include <stdio.h>
 #include <fcntl.h>
 
-	int main()
+int main()
+{
+	char	*line;
+	int		i;
+	int		fd1;
+	fd1 = open("./txtfile.txt", O_RDONLY);
+	i = 1;
+	while (i < 5)
 	{
-		char	*line;
-		int		i;
-		int		fd1;
-		fd1 = open("./txtfile.txt", O_RDONLY);
-		i = 1;
-		while (i < 5)
-		{
-			line = get_next_line(fd1);
-			printf("ligne %d:%s", i, line);
-			free(line);
-			i++;
-		}
-		close(fd1);
-		return (0);
+		line = get_next_line(fd1);
+		printf("ligne %d:%s", i, line);
+		free(line);
+		i++;
 	}
+	close(fd1);
+	return (0);
+}
