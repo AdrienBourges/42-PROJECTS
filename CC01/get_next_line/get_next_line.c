@@ -24,7 +24,23 @@ size_t	ft_strlen(const char *s)
 		i++;
 	return (i);
 }
+char	*ft_strdup(const char *src)
+{
+	int		i;
+	char	*dest;
 
+	i = 0;
+	dest = (char *)malloc(ft_strlen(src) + 1);
+	if (!dest)
+		return (0);
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
 char *ft_merge(char *s1, char *s2)
 {
 	char	*result;
@@ -33,14 +49,17 @@ char *ft_merge(char *s1, char *s2)
 	int		j;
 	
 	if (!s1)
-		return (s2);
+	{
+		result = ft_strdup(s2);
+		return (result);
+	}
 	total_size = ft_strlen(s1) + ft_strlen(s2);
 	result = malloc(total_size + 1);
 	if (!result)
 		return (NULL);
 	i = 0;
 	j = 0;
-		while (s1[i])
+	while (s1[i])
 	{
 		result[i] = s1[i];
 		i++;
@@ -51,7 +70,7 @@ char *ft_merge(char *s1, char *s2)
 		j++;
 	}
 	result[i + j] = '\0';
-	//free(s1);
+	free(s1);
 	return (result);
 }
 char *ft_stock_text(int fd, char *line) // fonction qui va permettre de stocker dynamiquement le texte dans la limite du buffer_size disponible, si buffer_size > nb de carac on stock tout directement car line est vide au premier appel de fonction
@@ -66,13 +85,13 @@ char *ft_stock_text(int fd, char *line) // fonction qui va permettre de stocker 
 		byte_index = read(fd, temp, BUFFER_SIZE);
 		if (byte_index == -1)
 		{
-		//	free(temp);
+			free(temp);
 			return (NULL);
 		}
 		temp[byte_index] = '\0';
 		line = ft_merge(line, temp);
 	}
-//	free(temp);
+	free(temp);
 	return (line);
 }
 
@@ -82,7 +101,7 @@ char *ft_append_line(char *line) // fonction qui sert a ajouter la ligne dans un
 	int i;
 
 	i = 0;
-	while (line[i] != '\n')
+	while (line[i] != '\n' && line[i])
 	{
 		i++;
 	}
@@ -123,7 +142,7 @@ char *ft_clear_line(char *str_temp) // fonction pour clean le static string jusq
 	{
 		j++;
 	}
-	result = malloc (j + 1);
+	result = malloc (j - i + 1);
 	j = 0;
 	while (str_temp[i])
 	{
@@ -132,7 +151,7 @@ char *ft_clear_line(char *str_temp) // fonction pour clean le static string jusq
 		j++;
 	}
 	result[j] = '\0';
-//	free(str_temp);
+	free(str_temp);
 	return (result);
 }
 
@@ -141,11 +160,15 @@ char *get_next_line(int fd)
 	char *result;
 	static char *str_temp;
 
-	if (fd <= 0 || BUFFER_SIZE < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	str_temp = ft_stock_text(fd, str_temp);
 	result = ft_append_line(str_temp);
 	str_temp = ft_clear_line(str_temp);
+	//if (!*str_temp)
+	//	free(str_temp);
+	//if (read(fd, str_temp, BUFFER_SIZE) == 0)
+	//		free(str_temp);
 	return (result);
 
 
