@@ -108,7 +108,7 @@ char *get_next_line(int fd)
 	str_temp = ft_clear_line(str_temp);
 	return (result);
 }
-
+/*
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -117,21 +117,16 @@ int main()
 	char	*line;
 	int		i;
 	int		fd1;
-	int		fd2;
 	fd1 = open("./txtfile.txt", O_RDONLY);
-	fd2 = open("./txtfile2.txt", O_RDONLY);
+	//fd1 = open("./txtfile.txt", O_RDONLY);
 	i = 1;
 	while (i < 4)
 	{
 		line = get_next_line(fd1);
 		printf("ligne %d:%s", i, line);
 		free(line);
-		line = get_next_line(fd2);
-		printf("ligne %d:%s", i, line);
-		free(line);
 		i++;
 	}
 	close(fd1);
-	close(fd2);
 	return (0);
-}
+}*/
