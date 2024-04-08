@@ -1,4 +1,4 @@
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int ft_is_newline(char *line) // fct qui permet de detecter si on a une newline dans notre char *, auquel cas on arrete de read dans ft_stock_text
 {
@@ -99,13 +99,13 @@ char *ft_clear_line(char *str_temp) // fonction pour clean le static string jusq
 char *get_next_line(int fd)
 {
 	char *result;
-	static char *str_temp;
+	static char *str_temp[1000];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	str_temp = ft_stock_text(fd, str_temp);
-	result = ft_append_line(str_temp);
-	str_temp = ft_clear_line(str_temp);
+	str_temp[fd] = ft_stock_text(fd, str_temp[fd]);
+	result = ft_append_line(str_temp[fd]);
+	str_temp[fd] = ft_clear_line(str_temp[fd]);
 	return (result);
 }
 /*
@@ -120,7 +120,7 @@ int main()
 	fd1 = open("./txtfile.txt", O_RDONLY);
 	//fd1 = open("./txtfile.txt", O_RDONLY);
 	i = 1;
-	while (i < 4)
+	while (i < 6)
 	{
 		line = get_next_line(fd1);
 		printf("ligne %d:%s", i, line);

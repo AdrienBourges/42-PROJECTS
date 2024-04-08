@@ -3,6 +3,9 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <limits.h>
+#include <sys/types.h>
+#include <sys/uio.h>
 
 char *ft_merge(char *s1, char *s2);
 size_t	ft_strlen(const char *s);

@@ -1,22 +1,9 @@
 #include "get_next_line.h"
 
-int ft_is_newline(char *line) // fct qui permet de detecter si on a une newline dans notre char *, auquel cas on arrete de read dans ft_stock_text
+char	*ft_stock_text(int fd, char *line) // fonction qui va permettre de stocker dynamiquement le texte dans la limite du buffer_size disponible, si buffer_size > nb de carac on stock tout directement car line est vide au premier appel de fonction
 {
-	if (!line)
-		return (0);
-	while (*line != '\n')
-	{
-		if (!*line)
-			return (0);
-		line++;
-	}
-	return (1);
-}	
-
-char *ft_stock_text(int fd, char *line) // fonction qui va permettre de stocker dynamiquement le texte dans la limite du buffer_size disponible, si buffer_size > nb de carac on stock tout directement car line est vide au premier appel de fonction
-{
-	char *temp;
-	int byte_index;
+	char	*temp;
+	int		byte_index;
 
 	temp = malloc (BUFFER_SIZE + 1);
 	byte_index = 1;
@@ -35,10 +22,10 @@ char *ft_stock_text(int fd, char *line) // fonction qui va permettre de stocker 
 	return (line);
 }
 
-char *ft_append_line(char *line) // fonction qui sert a ajouter la ligne dans un string et le return
+char	*ft_append_line(char *line) // fonction qui sert a ajouter la ligne dans un string et le return
 {
-	char *result;
-	int i;
+	char	*result;
+	size_t	i;
 
 	i = 0;
 	if (!line || !*line)
@@ -64,11 +51,23 @@ char *ft_append_line(char *line) // fonction qui sert a ajouter la ligne dans un
 	return (result);
 }
 
-char *ft_clear_line(char *str_temp) // fonction pour clean le static string jusquau premier \n rencontre  avant le prochain appel de gnl
+char	*ft_free_and_return(char *result, char *str_temp, size_t i)
 {
-	char *result;
-	size_t i;
-	size_t j;
+	size_t	j;
+
+	j = 0;
+	while (str_temp[i])
+		result[j++] = str_temp[i++];
+	result[j] = '\0';
+	free(str_temp);
+	return (result);
+}
+
+char	*ft_clear_line(char *str_temp) // fonction pour clean le static string jusquau premier \n rencontre  avant le prochain appel de gnl
+{
+	char	*result;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
 	while (str_temp && str_temp[i] != '\n' && str_temp[i])
@@ -88,27 +87,22 @@ char *ft_clear_line(char *str_temp) // fonction pour clean le static string jusq
 		free(str_temp);
 		return (NULL);
 	}
-	j = 0;
-	while (str_temp[i])
-		result[j++] = str_temp[i++];
-	result[j] = '\0';
-	free(str_temp);
-	return (result);
+	return (ft_free_and_return(result, str_temp, i));
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	char *result;
-	static char *str_temp;
+	char		*result;
+	static char	*str_temp[1000];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	str_temp = ft_stock_text(fd, str_temp);
-	result = ft_append_line(str_temp);
-	str_temp = ft_clear_line(str_temp);
+	str_temp[fd] = ft_stock_text(fd, str_temp[fd]);
+	result = ft_append_line(str_temp[fd]);
+	str_temp[fd] = ft_clear_line(str_temp[fd]);
 	return (result);
 }
-
+/*
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -117,21 +111,21 @@ int main()
 	char	*line;
 	int		i;
 	int		fd1;
-	int		fd2;
-	fd1 = open("./txtfile.txt", O_RDONLY);
-	fd2 = open("./txtfile2.txt", O_RDONLY);
+//	int		fd2;
+	fd1 = open("read_error.txt", O_RDONLY);
+//	fd2 = open("./txtfile2.txt", O_RDONLY);
 	i = 1;
-	while (i < 4)
+	while (i < 6)
 	{
 		line = get_next_line(fd1);
 		printf("ligne %d:%s", i, line);
 		free(line);
-		line = get_next_line(fd2);
-		printf("ligne %d:%s", i, line);
-		free(line);
+//		line = get_next_line(fd2);
+//		printf("ligne %d:%s", i, line);
+//		free(line);
 		i++;
 	}
 	close(fd1);
-	close(fd2);
+//	close(fd2);
 	return (0);
-}
+}*/
