@@ -2,5 +2,5 @@
 
 int main()
 {
-	printf("%-2s", "Hello");
+	printf("%p", "");
 }*/

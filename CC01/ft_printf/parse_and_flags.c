@@ -16,24 +16,27 @@ int is_specifier(char c)
 t_format parse_format(const char **format)
 {
 	t_format format_info = {0};
-
+	format_info.precision = -1;
 	//format_info = {0};
 	while (is_specifier(**format) == 0)
 	{
+		
+		if (**format == '-')
+			format_info.left_justify = 1;
+		if (**format == '0' && format_info.left_justify == 0)
+			format_info.zero_padding = 1;
 		while (ft_isdigit(**format))
 		{
 			format_info.width = format_info.width * 10 + (**format - 48);
 			(*format)++;
 		}
-		if (**format == '-')
-			format_info.left_justify = 1;
-		if (**format == '0' && format_info.left_justify == 0)
-			format_info.zero_padding = 1;
 		if (**format == '.')
 		{
+			format_info.precision = 0;
 			(*format)++;
 			while (ft_isdigit(**format))
 			{
+				
 				format_info.precision = format_info.precision * 10 + (**format - 48);
 				(*format)++;
 			}

@@ -36,18 +36,516 @@ int ft_printf(const char *format, ...)
 	return (i);
 }
 
+#include <stdio.h>  // Standard I/O for comparison
+#include "ft_printf.h"  // Your custom ft_printf
+
+
+
 #include <stdio.h>
+#include <stdio.h>  // Include standard I/O for comparison
+#include "ft_printf.h"  // Replace with your custom ft_printf header file
+/*
+int main() {
+    // Test numbers, including edge cases
+    int nums[] = {123, -123, 0, 1, -1, 2147483647, -2147483648};
+
+    // Loop through test numbers to print using both printf and ft_printf
+    for (int i = 0; i < sizeof(nums) / sizeof(nums[0]); i++) {
+        int num = nums[i];
+
+        // Test with various flags and width
+        printf("--- Testing: %d ---\n", num);
+
+        // No flags
+        printf("Standard printf: |%d|\n", num);
+        ft_printf("Custom ft_printf: |%d|\n\n", num);
+
+        // Space flag
+        printf("Standard printf: |% d|\n", num);
+        ft_printf("Custom ft_printf: |% d|\n\n", num);
+
+        // Plus flag
+        printf("Standard printf: |%+d|\n", num);
+        ft_printf("Custom ft_printf: |%+d|\n\n", num);
+
+        // Minus (left justify) flag with width
+        printf("Standard printf: |%-10d|\n", num);
+        ft_printf("Custom ft_printf: |%-10d|\n\n", num);
+
+        // Zero flag with width
+        printf("Standard printf: |%010d|\n", num);
+        ft_printf("Custom ft_printf: |%010d|\n\n", num);
+
+        // Space and minus flags with width
+        printf("Standard printf: |% -10d|\n", num);
+        ft_printf("Custom ft_printf: |% -10d|\n\n", num);
+
+        // Plus and minus flags with width
+        printf("Standard printf: |%+-10d|\n", num);
+        ft_printf("Custom ft_printf: |%+-10d|\n\n", num);
+
+        // Space, plus, and minus flags with width (plus should override space)
+        //printf("Standard printf: |% +-10d|\n", num);
+        //ft_printf("Custom ft_printf: |% +-10d|\n\n", num);
+
+        // Space, zero flag, and width (zero padding should be ignored due to space)
+        printf("Standard printf: |% 010d|\n", num);
+        ft_printf("Custom ft_printf: |% 010d|\n\n", num);
+
+        // Plus, zero flag, and width
+        printf("Standard printf: |%+010d|\n", num);
+        ft_printf("Custom ft_printf: |%+010d|\n\n", num);
+
+        // Complex combination: Plus, minus, zero flags with width
+        //printf("Standard printf: |%+-010d|\n", num); // Zero flag should be ignored due to minus flag
+        //ft_printf("Custom ft_printf: |%+-010d|\n\n", num);
+
+        printf("=========================\n\n");
+    }
+
+    return 0;
+}
+*/
+#include <stdio.h>  // Include standard I/O for comparison
+#include "ft_printf.h"  // Replace with your custom ft_printf header file
+/*
+int main() {
+    // Test numbers, including edge cases
+    unsigned int nums[] = {123, 0, 1, 4294967295};  // Includes UINT_MAX
+
+    // Loop through test numbers to print using both printf and ft_printf
+    for (int i = 0; i < sizeof(nums) / sizeof(nums[0]); i++) {
+        unsigned int num = nums[i];
+
+        // Test with various flags and width/precision
+        printf("--- Testing: %u ---\n", num);
+
+        // No flags, default width and precision
+        printf("Standard printf: |%u|\n", num);
+        ft_printf("Custom ft_printf: |%u|\n\n", num);
+
+        // Width specification
+        printf("Standard printf: |%10u|\n", num);
+        ft_printf("Custom ft_printf: |%10u|\n\n", num);
+
+        // Left justify with width
+        printf("Standard printf: |%-10u|\n", num);
+        ft_printf("Custom ft_printf: |%-10u|\n\n", num);
+
+        // Zero padding with width
+        printf("Standard printf: |%010u|\n", num);
+        ft_printf("Custom ft_printf: |%010u|\n\n", num);
+
+        // Precision only
+        printf("Standard printf: |%.5u|\n", num);
+        ft_printf("Custom ft_printf: |%.5u|\n\n", num);
+
+        // Precision with width, precision overrides zero padding
+        printf("Standard printf: |%10.5u|\n", num);
+        ft_printf("Custom ft_printf: |%10.5u|\n\n", num);
+
+        // Left justify with precision and width
+        printf("Standard printf: |%-10.5u|\n", num);
+        ft_printf("Custom ft_printf: |%-10.5u|\n\n", num);
+
+        // Zero padding with precision and width (precision should override zero padding)
+        //printf("Standard printf: |%010.5u|\n", num);
+        //ft_printf("Custom ft_printf: |%010.5u|\n\n", num);
+
+        printf("=========================\n\n");
+    }
+
+    return 0;
+}
+*/
+
+/*
+#include <stdio.h>  // Include standard I/O for comparison
+#include "ft_printf.h"  // Replace with your custom ft_printf header file
+
+int main() {
+    // Test numbers, including edge cases
+    unsigned int nums[] = {0, 1, 255, 0x12345, 0xFFFFFFFF};  // Includes 0, a small number, a typical number, and UINT_MAX
+
+    // Loop through test numbers to print using both printf and ft_printf
+    for (int i = 0; i < sizeof(nums) / sizeof(nums[0]); i++) {
+        unsigned int num = nums[i];
+
+        // Test with various flags and width/precision
+        printf("--- Testing: 0x%X ---\n", num);
+
+        // Default
+        printf("Standard printf: |%x|\n", num);
+        ft_printf("Custom ft_printf: |%x|\n\n", num);
+
+        // Width
+        printf("Standard printf: |%10x|\n", num);
+        ft_printf("Custom ft_printf: |%10x|\n\n", num);
+
+        // Left justify with width
+        printf("Standard printf: |%-10x|\n", num);
+        ft_printf("Custom ft_printf: |%-10x|\n\n", num);
+
+        // Precision
+        printf("Standard printf: |%.5x|\n", num);
+        ft_printf("Custom ft_printf: |%.5x|\n\n", num);
+
+        // Width and precision
+        printf("Standard printf: |%10.5x|\n", num);
+        ft_printf("Custom ft_printf: |%10.5x|\n\n", num);
+
+        // Left justify with width and precision
+        printf("Standard printf: |%-10.5x|\n", num);
+        ft_printf("Custom ft_printf: |%-10.5x|\n\n", num);
+
+        // Hash flag
+        printf("Standard printf: |%#x|\n", num);
+        ft_printf("Custom ft_printf: |%#x|\n\n", num);
+
+        // Hash flag with width
+        printf("Standard printf: |%#10x|\n", num);
+        ft_printf("Custom ft_printf: |%#10x|\n\n", num);
+
+        // Hash flag with precision
+        printf("Standard printf: |%#.5x|\n", num);
+        ft_printf("Custom ft_printf: |%#.5x|\n\n", num);
+
+        // Hash flag with width and precision
+        printf("Standard printf: |%#10.5x|\n", num);
+        ft_printf("Custom ft_printf: |%#10.5x|\n\n", num);
+
+        // Zero padding with width
+        printf("Standard printf: |%010x|\n", num);
+        ft_printf("Custom ft_printf: |%010x|\n\n", num);
+
+        // Zero padding with width, overridden by precision
+        //printf("Standard printf: |%010.5x|\n", num);
+        //ft_printf("Custom ft_printf: |%010.5x|\n\n", num);
+
+        printf("=========================\n\n");
+    }
+
+    return 0;
+}
+*/
+/*
+#include <stdio.h>  // Standard I/O for comparison
+#include "ft_printf.h"  // Your custom ft_printf header
+
+int main() {
+    // Test pointers
+    int a = 42;
+    void *ptrs[] = {NULL, &a, (void*)0x12345678, (void*)0xFFFFFFFF};
+
+    // Loop through test pointers to print using both printf and ft_printf
+    for (int i = 0; i < sizeof(ptrs) / sizeof(ptrs[0]); i++) {
+        void *ptr = ptrs[i];
+
+        // Test with various width specifications
+        printf("--- Testing pointer: %p ---\n", ptr);
+        printf("Standard printf: |%p|\n", ptr);
+        ft_printf("Custom ft_printf: |%p|\n\n", ptr);
+
+        // Width
+        printf("Standard printf: |%20p|\n", ptr);
+        ft_printf("Custom ft_printf: |%20p|\n\n", ptr);
+
+        // Left justify with width
+        printf("Standard printf: |%-20p|\n", ptr);
+        ft_printf("Custom ft_printf: |%-20p|\n\n", ptr);
+
+        printf("=========================\n\n");
+    }
+
+    return 0;
+}
+*/
+
+#include <stdio.h>  // Standard I/O for comparison
+#include "ft_printf.h"  // Replace with your custom ft_printf header
+/*
+int main() {
+    // Array of characters to test
+    char chars[] = {'a', 'Z', '0', '*', ' '};  // Include a whitespace character
+
+    // Test each character with varying widths and the minus flag
+    for (int i = 0; i < sizeof(chars) / sizeof(chars[0]); i++) {
+        char c = chars[i];
+
+        // Header to indicate what is being tested
+        printf("--- Testing character: '%c' ---\n", c);
+
+        // Test without any flags or width
+        printf("Standard printf: |%c|\n", c);
+        ft_printf("Custom ft_printf: |%c|\n\n", c);
+
+        // Test with width
+        printf("Standard printf: |%5c|\n", c);
+        ft_printf("Custom ft_printf: |%5c|\n\n", c);
+
+        // Test with minus flag and width
+        printf("Standard printf: |%-5c|\n", c);
+        ft_printf("Custom ft_printf: |%-5c|\n\n", c);
+
+        // Further tests with different widths to see edge cases
+        printf("Standard printf: |%1c|\n", c);
+        ft_printf("Custom ft_printf: |%1c|\n\n", c);
+
+        printf("Standard printf: |%10c|\n", c);
+        ft_printf("Custom ft_printf: |%10c|\n\n", c);
+
+        printf("Standard printf: |%-10c|\n", c);
+        ft_printf("Custom ft_printf: |%-10c|\n\n", c);
+
+        printf("=========================\n\n");
+    }
+
+    return 0;
+}
+
+*/
+
+
+
 
 
 /*
 int main()
 {
-ft_printf("%10s","test" );
+ft_printf("%15d", -42 );
 printf("\n");
-printf("%10s", "test");
-}	
+printf("%15d", -42);
+}*/
+/*
+#include <stdio.h>  // Include standard I/O for comparison
+#include "ft_printf.h"  // Include your custom ft_printf header
+
+int main() {
+    // Test numbers
+    int nums[] = {123, -123, 0, 1, -1};
+
+    // Loop through test numbers to print using both printf and ft_printf
+    for (int i = 0; i < sizeof(nums) / sizeof(nums[0]); i++) {
+        int num = nums[i];
+
+        // Test without flags, with various width values
+        printf("Standard printf: |%4d|\n", num);
+        ft_printf("Custom ft_printf: |%4d|\n\n", num);
+
+        printf("Standard printf: |%8d|\n", num);
+        ft_printf("Custom ft_printf: |%8d|\n\n", num);
+
+        // Test with left-justification flag and various width values
+        printf("Standard printf: |%-4d|\n", num);
+        ft_printf("Custom ft_printf: |%-4d|\n\n", num);
+
+        printf("Standard printf: |%-8d|\n", num);
+        ft_printf("Custom ft_printf: |%-8d|\n\n", num);
+
+        // Test with zero padding flag and various width values
+        printf("Standard printf: |%04d|\n", num);
+        ft_printf("Custom ft_printf: |%04d|\n\n", num);
+
+        printf("Standard printf: |%08d|\n", num);
+        ft_printf("Custom ft_printf: |%08d|\n\n", num);
+
+        // Test with precision
+        printf("Standard printf: |%.4d|\n", num);
+        ft_printf("Custom ft_printf: |%.4d|\n\n", num);
+
+        printf("Standard printf: |%.8d|\n", num);
+        ft_printf("Custom ft_printf: |%.8d|\n\n", num);
+
+        // Test with precision and width
+        printf("Standard printf: |%8.4d|\n", num);
+        ft_printf("Custom ft_printf: |%8.4d|\n\n", num);
+
+        // Test with zero padding, precision, and width (precision should override zero padding)
+        //printf("Standard printf: |%08.4d|\n", num);
+        //ft_printf("Custom ft_printf: |%08.4d|\n\n", num);
+
+        printf("========================================\n");
+    }
+
+    return 0;
+}
+*/
+/*
+#include <stdio.h>  // Include standard I/O for comparison
+#include "ft_printf.h"  // Include your custom ft_printf header
+
+int main() {
+    // Test unsigned numbers for hexadecimal representation
+    unsigned int nums[] = {123, 0, 1, 4294967295};  // Includes UINT_MAX
+
+    // Loop through test numbers to print using both printf and ft_printf
+    for (int i = 0; i < sizeof(nums) / sizeof(nums[0]); i++) {
+        // Testing with %x specifier (lowercase hexadecimal)
+        printf("Lowercase Hexadecimal (%%x):\n");
+        printf("printf   : %x\n", nums[i]);
+        ft_printf("ft_printf: %x\n\n", nums[i]);
+
+        printf("printf   : %3x\n", nums[i]);
+        ft_printf("ft_printf: %3x\n\n", nums[i]);
+
+        printf("printf   : %5x\n", nums[i]);
+        ft_printf("ft_printf: %5x\n\n", nums[i]);
+
+        printf("printf   : %10x\n", nums[i]);
+        ft_printf("ft_printf: %10x\n\n", nums[i]);
+
+        printf("printf   : %03x\n", nums[i]);
+        ft_printf("ft_printf: %03x\n\n", nums[i]);
+
+        printf("printf   : %05x\n", nums[i]);
+        ft_printf("ft_printf: %05x\n\n", nums[i]);
+
+        printf("printf   : %-3x\n", nums[i]);
+        ft_printf("ft_printf: %-3x\n\n", nums[i]);
+
+        printf("printf   : %-5x\n", nums[i]);
+        ft_printf("ft_printf: %-5x\n\n", nums[i]);
+
+        printf("printf   : %-10x\n", nums[i]);
+        ft_printf("ft_printf: %-10x\n\n", nums[i]);
+
+        // Testing with %X specifier (uppercase hexadecimal)
+        printf("Uppercase Hexadecimal (%%X):\n");
+        printf("printf   : %X\n", nums[i]);
+        ft_printf("ft_printf: %X\n\n", nums[i]);
+
+        printf("printf   : %3X\n", nums[i]);
+        ft_printf("ft_printf: %3X\n\n", nums[i]);
+
+        printf("printf   : %5X\n", nums[i]);
+        ft_printf("ft_printf: %5X\n\n", nums[i]);
+
+        printf("printf   : %10X\n", nums[i]);
+        ft_printf("ft_printf: %10X\n\n", nums[i]);
+
+        printf("printf   : %03X\n", nums[i]);
+        ft_printf("ft_printf: %03X\n\n", nums[i]);
+
+        printf("printf   : %05X\n", nums[i]);
+        ft_printf("ft_printf: %05X\n\n", nums[i]);
+
+        printf("printf   : %-3X\n", nums[i]);
+        ft_printf("ft_printf: %-3X\n\n", nums[i]);
+
+        printf("printf   : %-5X\n", nums[i]);
+        ft_printf("ft_printf: %-5X\n\n", nums[i]);
+
+        printf("printf   : %-10X\n", nums[i]);
+        ft_printf("ft_printf: %-10X\n\n", nums[i]);
+
+        printf("========================================\n");
+    }
+
+    return 0;
+}
+
+*/
+/*
+#include <stdio.h>  // Include standard I/O for comparison
+#include "ft_printf.h"  // Include your custom ft_printf header
+
+int main() {
+    // Test unsigned numbers
+    unsigned int nums[] = {123, 0, 1, 4294967295};  // Includes UINT_MAX
+
+    // Loop through test numbers to print using both printf and ft_printf
+    for (int i = 0; i < sizeof(nums) / sizeof(nums[0]); i++) {
+        // Without flags
+        printf("printf   : %u\n", nums[i]);
+        ft_printf("ft_printf: %u\n\n", nums[i]);
+
+        printf("printf   : %3u\n", nums[i]);
+        ft_printf("ft_printf: %3u\n\n", nums[i]);
+
+        printf("printf   : %5u\n", nums[i]);
+        ft_printf("ft_printf: %5u\n\n", nums[i]);
+
+        printf("printf   : %10u\n", nums[i]);
+        ft_printf("ft_printf: %10u\n\n", nums[i]);
+
+        // With zero padding flag
+        printf("printf   : %03u\n", nums[i]);
+        ft_printf("ft_printf: %03u\n\n", nums[i]);
+
+        printf("printf   : %05u\n", nums[i]);
+        ft_printf("ft_printf: %05u\n\n", nums[i]);
+
+        printf("printf   : %010u\n", nums[i]);
+        ft_printf("ft_printf: %010u\n\n", nums[i]);
+
+        // With left-justification flag
+        printf("printf   : %-3u\n", nums[i]);
+        ft_printf("ft_printf: %-3u\n\n", nums[i]);
+
+        printf("printf   : %-5u\n", nums[i]);
+        ft_printf("ft_printf: %-5u\n\n", nums[i]);
+
+        printf("printf   : %-10u\n", nums[i]);
+        ft_printf("ft_printf: %-10u\n\n", nums[i]);
+
+        printf("========================================\n");
+    }
+
+    return 0;
+}
 */
 
+/*
+#include <stdio.h>  // Include standard I/O for comparison
+#include "ft_printf.h"  // Include your custom ft_printf header
+
+int main() {
+    // Test numbers
+    int nums[] = {123, -123, 0, 1, -1, 2147483647};
+    // Widths are now part of the format strings below, so this array is not needed.
+
+    // Loop through test numbers to print using both printf and ft_printf
+    for (int i = 0; i < sizeof(nums) / sizeof(nums[0]); i++) {
+        // Without flags
+        printf("printf   : %d\n", nums[i]);
+        ft_printf("ft_printf: %d\n\n", nums[i]);
+
+        printf("printf   : %3d\n", nums[i]);
+        ft_printf("ft_printf: %3d\n\n", nums[i]);
+
+        printf("printf   : %5d\n", nums[i]);
+        ft_printf("ft_printf: %5d\n\n", nums[i]);
+
+        printf("printf   : %10d\n", nums[i]);
+        ft_printf("ft_printf: %10d\n\n", nums[i]);
+
+        // With zero padding flag
+        printf("printf   : %03d\n", nums[i]);
+        ft_printf("ft_printf: %03d\n\n", nums[i]);
+
+        printf("printf   : %05d\n", nums[i]);
+        ft_printf("ft_printf: %05d\n\n", nums[i]);
+
+        printf("printf   : %010d\n", nums[i]);
+        ft_printf("ft_printf: %010d\n\n", nums[i]);
+
+        // With left-justification flag
+        printf("printf   : %-3d\n", nums[i]);
+        ft_printf("ft_printf: %-3d\n\n", nums[i]);
+
+        printf("printf   : %-5d\n", nums[i]);
+        ft_printf("ft_printf: %-5d\n\n", nums[i]);
+
+        printf("printf   : %-10d\n", nums[i]);
+        ft_printf("ft_printf: %-10d\n\n", nums[i]);
+
+        printf("========================================\n");
+    }
+
+    return 0;
+}
+
+*/
 /*
 #include <stdio.h>  // For standard printf
 #include <limits.h> // For INT_MIN, INT_MAX, etc.
@@ -119,7 +617,7 @@ int main(void) {
 	return 0;
 }
 */
-
+/*
 #include "ft_printf.h"  // Make sure to include the header for your ft_printf function
 #include <stdio.h>
 int main() {
@@ -186,5 +684,5 @@ int main() {
     printf("Width with empty string: %5.s\n", "");  // Expected: Width with empty string:      
 
     return 0;
-}
+}*/
 
