@@ -35,7 +35,7 @@ int ft_printf(const char *format, ...)
 	va_end(args);
 	return (i);
 }
-
+/*
 #include <stdio.h>  // Standard I/O for comparison
 #include "ft_printf.h"  // Your custom ft_printf
 
@@ -105,7 +105,7 @@ int main() {
     printf("============================================================================\n\n");
     return 0;
 }
-
+*/
 
 #include <stdio.h>
 #include <stdio.h>  // Include standard I/O for comparison

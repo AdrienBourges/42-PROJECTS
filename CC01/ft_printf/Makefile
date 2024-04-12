@@ -12,9 +12,10 @@ OBJS = $(SRCS:.c=.o)
 
 MAKE = make
 
-all =   
-		$(MAKE) -C  ./libft
-		$(NAME)
+libft :	
+	@$(MAKE) -C  ./libft
+
+all :  libft $(NAME)
 
 $(NAME): $(OBJS)
 	ar rcs $(NAME) $(OBJS)
@@ -25,9 +26,6 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 
-re: fclean $(NAME)
+re: fclean all
 
-bonus: $(OBJS) 
-	ar rcs $(NAME) $(OBJS)
-
-.PHONY: all clean fclean re 
+.PHONY: all clean fclean re libft

@@ -281,7 +281,7 @@ void ft_print_udecimal(va_list args, t_format format_info)
 	}
 }
 
-char *ft_put_hexa(unsigned int nb, char c, t_format format_info)
+char *ft_put_hexa(unsigned int nb, char c)
 {
 	char *hex_base;
 	int i;
@@ -320,7 +320,7 @@ void ft_printhexa(va_list args, char c, t_format format_info)
 	int precision_padding;
 
 	result = va_arg(args, unsigned int);
-	return_value = ft_put_hexa(result, c, format_info);
+	return_value = ft_put_hexa(result, c);
 	return_length = ft_strlen(return_value);
 	prefix_length = (format_info.alternative_form && result != 0) ? 2 : 0; 
 	precision_padding = (format_info.precision > return_length) ? format_info.precision - return_length : 0;
