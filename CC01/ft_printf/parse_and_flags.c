@@ -1,11 +1,5 @@
 #include "ft_printf.h"
-#include "libft/libft.h"
-int	ft_isdigit(int a)
-{
-	if (a >= '0' && a <= '9')
-		return (1);
-	return (0);
-}
+
 int is_specifier(char c)
 {
 	if (c == 'c' || c =='s' || c == 'p' || c == 'd' || c == 'i' || c == 'u' || c == 'x' || c == 'X' || c == '%')
@@ -17,7 +11,6 @@ t_format parse_format(const char **format)
 {
 	t_format format_info = {0};
 	format_info.precision = -1;
-	//format_info = {0};
 	while (is_specifier(**format) == 0)
 	{
 		

@@ -1,53 +1,4 @@
 #include "ft_printf.h"
-#include "libft/libft.h"
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-void ft_leftjustify (char *str, t_format format_info)
-{
-	size_t len;
-
-	len = ft_strlen(str);
-	//format_info.width = 10;
-	ft_putstr(str);
-	format_info.width -= len;
-	while (format_info.width > 0)
-	{
-		ft_putchar(' ');
-		format_info.width--;
-	}
-}
-
-void ft_precision(char *str, t_format format_info)
-{
-	while (format_info.precision > 0 && *str)
-	{
-		ft_putchar(*str++);
-		format_info.precision--;
-	}
-}
-
-void ft_preci_lj(char *str, t_format format_info)
-{
-	while (format_info.precision > 0 && *str)
-	{
-		ft_putchar(*str++);
-		format_info.precision--;
-		format_info.width--;
-	}
-	while (format_info.width > 0)
-	{
-		ft_putchar(' ');
-		format_info.width--;
-	}
-}
 
 void ft_printstr(va_list args, t_format format_info)
 {
@@ -78,35 +29,6 @@ void ft_printstr(va_list args, t_format format_info)
 		write(1, str, real_prec);
 	}
 }
-
-
-/*if (format_info.left_justify == 1 && format_info.precision == 0)
-  ft_leftjustify(str, format_info);
-  if (format_info.precision > 0 && format_info.left_justify == 0)
-  ft_precision(str, format_info);
-  if (format_info.precision > 0 && format_info.left_justify == 1)	
-  ft_preci_lj(str, format_info);
-  if (format_info.precision == 0 && format_info.left_justify == 0 && format_info.width > 0) 
-  {
-  format_info.width -= ft_strlen(str);
-  while (format_info.width > 0)
-  {
-  ft_putchar(' ');
-  format_info.width--;
-  }
-  ft_putstr(str);
-  else if (format_info.precision > 0 && format_info.left_justify == 0 && format_info.width > 0)
-  {
-  format_info.width -= ft_strlen(str);
-  ft_putstr(str);
-  while (format_info.width > 0)
-  {
-  ft_putchar(' ');
-  format_info.width--;
-  }
-  }
-  }
-  */
 
 void ft_printchar(va_list args, t_format format_info)
 {
@@ -156,7 +78,6 @@ void ft_putstr_reverse(char *str)
 		len--;
 	}
 }
-
 
 char *ft_printhexa_ptr(unsigned long long nb)
 {
@@ -237,31 +158,6 @@ void ft_printpointer(va_list args, t_format format_info)
 	write(1, "0x", 2);
 	ft_putstr_reverse(result);
 	free (result);
-}
-void	ft_putchar_fd(char c, int fd)
-{
-	write(fd, &c, 1);
-}
-void	ft_putnbr_fd(int nb, int fd)
-{
-	if (nb == -2147483648)
-	{
-		write(fd, "-2147483648", 11);
-		return ;
-	}
-	else if (nb < 0)
-	{
-		ft_putchar_fd('-', fd);
-		nb = -nb;
-		ft_putnbr_fd(nb, fd);
-	}
-	else if (nb > 9)
-	{
-		ft_putnbr_fd(nb / 10, fd);
-		ft_putnbr_fd(nb % 10, fd);
-	}
-	else
-		ft_putchar_fd(nb + 48, fd);
 }
 
 int ft_lennbr(int nbr)
@@ -413,12 +309,7 @@ char *ft_put_hexa(unsigned int nb, char c, t_format format_info)
 	}
 	result[i] = '\0';
 	return (result);
-	/*while (i > 0)
-	  {
-	  i--;
-	  ft_putchar(result[i]);
-	  }*/
-}
+	}
 
 void ft_printhexa(va_list args, char c, t_format format_info)
 {

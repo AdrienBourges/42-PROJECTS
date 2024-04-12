@@ -39,6 +39,72 @@ int ft_printf(const char *format, ...)
 #include <stdio.h>  // Standard I/O for comparison
 #include "ft_printf.h"  // Your custom ft_printf
 
+#include <stdio.h>  // Standard I/O for comparison
+#include "ft_printf.h"  // Your custom ft_printf header
+
+int main() {
+    // Different values for testing
+    char chars[] = {'A', '\0', 'z', '1', '%'};
+    char *strings[] = {"Hello, world!", "", "Another test string.", NULL, "1234567890"};
+    void *pointers[] = {NULL, strings, (void *)0x7fff, (void *)0xFFFFFFFFFFFFFFFF, (void *)chars};
+    int integers[] = {2147483647, -2147483648, 0, 1, -1};
+    unsigned int uintegers[] = {0, 1, 4294967295, 256, 1024};
+    int hexValues[] = {0x1, 0x10, 0xABC, 0xFFFF, 0x123456};
+
+    // Header for clarity
+    printf("Comprehensive Testing of ft_printf with Various Values and Flag Combinations\n");
+    printf("============================================================================\n\n");
+
+    // %c specifier tests with combinations
+    printf("--- %%c Specifier ---\n");
+    for (int i = 0; i < sizeof(chars) / sizeof(chars[0]); i++) {
+        printf("Standard printf: |%c| |%5c| |%-5c|\n", chars[i], chars[i], chars[i]);
+        ft_printf("Custom ft_printf: |%c| |%5c| |%-5c|\n\n", chars[i], chars[i], chars[i]);
+    }
+
+    // %s specifier tests with combinations
+    printf("--- %%s Specifier ---\n");
+    for (int i = 0; i < sizeof(strings) / sizeof(strings[0]); i++) {
+        if (strings[i] == NULL) {
+            printf("Standard printf: |%s| |%20s| |%-20s| |%.5s|\n", "(null)", "(null)", "(null)", "(null)");
+            ft_printf("Custom ft_printf: |%s| |%20s| |%-20s| |%.5s|\n\n", "(null)", "(null)", "(null)", "(null)");
+        } else {
+            printf("Standard printf: |%s| |%20s| |%-20s| |%.5s|\n", strings[i], strings[i], strings[i], strings[i]);
+            ft_printf("Custom ft_printf: |%s| |%20s| |%-20s| |%.5s|\n\n", strings[i], strings[i], strings[i], strings[i]);
+        }
+    }
+
+    // %p specifier tests with combinations
+    printf("--- %%p Specifier ---\n");
+    for (int i = 0; i < sizeof(pointers) / sizeof(pointers[0]); i++) {
+        printf("Standard printf: |%p| |%20p| |%-20p| |%20p|\n", pointers[i], pointers[i], pointers[i], pointers[i]);
+        ft_printf("Custom ft_printf: |%p| |%20p| |%-20p| |%20p|\n\n", pointers[i], pointers[i], pointers[i], pointers[i]);
+    }
+
+    // %d and %i specifier tests with combinations
+    printf("--- %%d and %%i Specifiers ---\n");
+    for (int i = 0; i < sizeof(integers) / sizeof(integers[0]); i++) {
+        printf("Standard printf: |%d| |%+d| |% d| |%05d| |%.5d| |%-10d| |%+10.5d|\n", integers[i], integers[i], integers[i], integers[i], integers[i], integers[i], integers[i]);
+        ft_printf("Custom ft_printf: |%d| |%+d| |% d| |%05d| |%.5d| |%-10d| |%+10.5d|\n\n", integers[i], integers[i], integers[i], integers[i], integers[i], integers[i], integers[i]);
+    }
+
+    // %u specifier tests with combinations
+    printf("--- %%u Specifier ---\n");
+    for (int i = 0; i < sizeof(uintegers) / sizeof(uintegers[0]); i++) {
+        printf("Standard printf: |%u| |%20u| |%-20u| |%010u| |%.5u| |%-20.10u|\n", uintegers[i], uintegers[i], uintegers[i], uintegers[i], uintegers[i], uintegers[i]);
+        ft_printf("Custom ft_printf: |%u| |%20u| |%-20u| |%010u| |%.5u| |%-20.10u|\n\n", uintegers[i], uintegers[i], uintegers[i], uintegers[i], uintegers[i], uintegers[i]);
+    }
+
+    // %x and %X specifiers tests with combinations
+    printf("--- %%x and %%X Specifiers ---\n");
+    for (int i = 0; i < sizeof(hexValues) / sizeof(hexValues[0]); i++) {
+        printf("Standard printf: |%x| |%#x| |%20x| |%-20x| |%010x| |%.5x| |%10x| |%#20.10X|\n", hexValues[i], hexValues[i], hexValues[i], hexValues[i], hexValues[i], hexValues[i], hexValues[i], hexValues[i]);
+        ft_printf("Custom ft_printf: |%x| |%#x| |%20x| |%-20x| |%010x| |%.5x| |%10x| |%#20.10X|\n\n", hexValues[i], hexValues[i], hexValues[i], hexValues[i], hexValues[i], hexValues[i], hexValues[i], hexValues[i]);
+    }
+
+    printf("============================================================================\n\n");
+    return 0;
+}
 
 
 #include <stdio.h>

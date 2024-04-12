@@ -23,6 +23,7 @@ int ft_printf(const char *format, ...);
 void ft_specifier(const char **format, va_list args);
 t_format parse_format(const char **format);
 int is_specifier(char c);
+size_t ft_strlen(const char *s);
 
 
 

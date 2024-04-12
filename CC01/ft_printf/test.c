@@ -2,5 +2,6 @@
 
 int main()
 {
-	printf("%p", "");
+	int i = -2147483648;
+	printf("%d", i);
 }*/
