@@ -1,7 +1,10 @@
-/*#include <stdio.h>
+#include <stdio.h>
+#include "ft_printf.h"
 
+/*
 int main()
 {
-	int i = -2147483648;
-	printf("%d", i);
+	int result = printf("%-3c", 'a');
+	printf("\n");
+	printf ("number of char : %d", result);
 }*/

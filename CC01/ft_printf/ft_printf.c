@@ -1,40 +1,50 @@
 #include "ft_printf.h"
-#include "libft/libft.h"
 
-void ft_putchar(char c)
+int ft_putchar(char c)
 {
 	write(1, &c, 1);
+	return (1);
 }
 
-void ft_putstr(char *str)
+int ft_putstr(char *str)
 {
+	int result;
+
+	result = 0;
 	while (*str)
-		ft_putchar(*str++);
+		result += ft_putchar(*str++);
+	return (result);
 }
 
 int ft_printf(const char *format, ...)
 {
 	va_list args;
-	int i;
+	int result;
 
-	i = 0;
+	result = 0;
 	va_start(args, format);
 	while (*format)
 	{
 		if (*format == '%')
 		{
-			i++;
 			format++;
-			ft_specifier(&format , args);
+			result += ft_specifier(&format , args);
 		}
 		else
-			ft_putchar(*format);
-		i++;
+			result += ft_putchar(*format);
 		format++;
 	}
 	va_end(args);
-	return (i);
+	return (result);
 }
+/*
+#include <stdio.h>
+int main()
+{
+	char *str = NULL;
+	printf("%3.s", str);
+}*/
+
 /*
 #include <stdio.h>  // Standard I/O for comparison
 #include "ft_printf.h"  // Your custom ft_printf

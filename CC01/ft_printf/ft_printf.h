@@ -17,10 +17,10 @@ typedef struct s_format
     int precision;
 } t_format;
 
-void ft_putchar(char c);
-void ft_putstr(char *str);
+int ft_putchar(char c);
+int ft_putstr(char *str);
 int ft_printf(const char *format, ...);
-void ft_specifier(const char **format, va_list args);
+int ft_specifier(const char **format, va_list args);
 t_format parse_format(const char **format);
 int is_specifier(char c);
 size_t ft_strlen(const char *s);
