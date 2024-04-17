@@ -1,0 +1,90 @@
+#include "ft_printf.h"
+
+int ft_lennbr(int nbr, t_format format_info)
+{
+	int len;
+
+	long nb;
+	nb = nbr;
+	len = 0;
+	if (nb == 0 && format_info.precision == 0)
+		return (0);
+	if (nb <= 0)
+	{
+		nb = -nb;
+		len++;
+	}	
+	while (nb > 0)
+	{
+		nb /= 10;
+		len++;
+	}
+	return (len);
+}
+
+int ft_putnbr(int nb)
+{
+	int result;
+
+	result = 0;
+	if (nb > 9)
+	{
+		result += ft_putnbr(nb / 10);
+	}
+	result += ft_putchar(nb % 10 + 48);
+	return (result);
+}
+
+int ft_printdecimal(va_list args, t_format format_info)
+{
+	int result;
+	int is_negative;
+	int num_len;
+	int precision_padding;
+	int sign_space;
+	int total_padding;
+	int chars_nb;
+
+	chars_nb = 0;
+	result = va_arg(args, int);
+	is_negative = result < 0;
+	num_len = ft_lennbr(is_negative ? -result : result, format_info);
+	if (result == -2147483648)
+		num_len = 10;
+	precision_padding = (format_info.precision > num_len) ? format_info.precision - num_len : 0;
+	sign_space = (is_negative || format_info.plus || format_info.space) ? 1 : 0;
+	total_padding = format_info.width - (precision_padding + num_len + sign_space);
+
+	if (!format_info.left_justify && (format_info.precision >= 0 || !format_info.zero_padding)) 
+	{
+		while (total_padding-- > 0) 
+			chars_nb += ft_putchar(' ');
+	}
+	if (is_negative) 
+		chars_nb += ft_putchar('-');
+	else if (format_info.plus) 
+		chars_nb += ft_putchar('+');
+	else if (format_info.space) 
+		chars_nb += ft_putchar(' ');
+	if (!format_info.left_justify && format_info.zero_padding && format_info.precision < 0) 
+	{
+		while (total_padding-- > 0) 
+			chars_nb += ft_putchar('0');
+	}
+	if ((result == 0 && format_info.precision != 0) || result != 0 )
+	{
+		while (precision_padding-- > 0) 
+			chars_nb += ft_putchar('0');
+		if (result == -2147483648)
+			chars_nb += ft_putstr("2147483648");
+		else
+			chars_nb += ft_putnbr(is_negative ? -result : result);
+	}
+	if (format_info.left_justify) 
+	{
+		while (total_padding-- > 0) 
+			chars_nb += ft_putchar(' ');
+	}
+	return (chars_nb);
+}
+

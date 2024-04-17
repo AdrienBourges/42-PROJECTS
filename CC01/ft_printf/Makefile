@@ -2,12 +2,8 @@ NAME			=	libftprintf.a
 
 CC				=	gcc
 CFLAGS			=	-Wall -Wextra -Werror
-AR				=	ar
-ARFLAGS 		=	rcs
-RM				=	rm -rf
 
-SRC				=	ft_printf parse_and_flags Specifier_conversion
-SRCS 			=	$(addsuffix .c, $(SRC))
+SRCS 			=	ft_printf.c parse_and_flags.c Specifier_conversion.c Print_strings.c Print_pointers.c Print_decimals.c Print_hexas.c Print_unsigned.c printf_utils.c printf_utils2.c
 
 OBJ_DIR			=	obj
 OBJS			=	$(SRCS:%.c=$(OBJ_DIR)/%.o)
@@ -24,7 +20,7 @@ bonus:				all
 
 $(NAME):			$(LIBFT) $(OBJ_DIR) $(OBJS)
 				cp	$(LIBFT) $(NAME)
-					$(AR) $(ARFLAGS) $(NAME) $(OBJS)
+					ar -rcs $(NAME) $(OBJS)
 
 $(LIBFT):
 					make -C $(LIBFT_PATH) all
@@ -34,11 +30,11 @@ $(OBJ_DIR):
 
 clean:
 					make -C $(LIBFT_PATH) clean
-					$(RM) $(OBJ_DIR)
+					rm -rf $(OBJ_DIR)
 
 fclean:				clean
 					make -C $(LIBFT_PATH) fclean
-					$(RM) $(NAME)
+					rm -rf $(NAME)
 
 re:					fclean all
 
