@@ -15,7 +15,12 @@ char	*ft_clear_line(char *str_temp);
 char	*get_next_line(int fd);
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 400
+#  define BUFFER_SIZE 42
+#  endif
 
-# endif
+#  ifndef OPEN_MAX
+
+#  define OPEN_MAX 1024
+#endif
+
 #endif

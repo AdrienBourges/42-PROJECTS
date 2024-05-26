@@ -19,17 +19,24 @@ char *ft_stock_text(int fd, char *line) // fonction qui va permettre de stocker 
 	int byte_index;
 
 	temp = malloc (BUFFER_SIZE + 1);
+	if (!temp)
+		return (NULL);
 	byte_index = 1;
-	while (byte_index > 0 && ft_is_newline(line) == 0)
+	while (temp && byte_index > 0 && ft_is_newline(line) == 0)
 	{
 		byte_index = read(fd, temp, BUFFER_SIZE);
 		if (byte_index == -1)
 		{
 			free(temp);
+			free(line);
 			return (NULL);
 		}
+		if (byte_index == 0)
+			break;
 		temp[byte_index] = '\0';
 		line = ft_merge(line, temp);
+		if (!line)
+			break;
 	}
 	free(temp);
 	return (line);
@@ -41,11 +48,11 @@ char *ft_append_line(char *line) // fonction qui sert a ajouter la ligne dans un
 	int i;
 
 	i = 0;
-	if (!line || !*line)
-		return (NULL);
 	while (line[i] != '\n' && line[i])
 		i++;
-	result = malloc (i + 2);
+	if (line[i] == '\n')
+		i++;
+	result = malloc (i + 1);	
 	if (!result)
 		return (NULL);
 	i = 0;
@@ -70,6 +77,11 @@ char *ft_clear_line(char *str_temp) // fonction pour clean le static string jusq
 	size_t i;
 	size_t j;
 
+	if (!str_temp || !*str_temp)
+	{
+		free (str_temp);
+		return (NULL);
+	}
 	i = 0;
 	while (str_temp && str_temp[i] != '\n' && str_temp[i])
 		i++;
@@ -82,7 +94,7 @@ char *ft_clear_line(char *str_temp) // fonction pour clean le static string jusq
 		free(str_temp);
 		return (NULL);
 	}
-	result = malloc (j + i + 1);
+	result = malloc (j + 1);
 	if (!result)
 	{
 		free(str_temp);
@@ -96,18 +108,37 @@ char *ft_clear_line(char *str_temp) // fonction pour clean le static string jusq
 	return (result);
 }
 
-char *get_next_line(int fd)
+void __attribute__((destructor)) free_buffers()
 {
-	char *result;
-	static char *str_temp[1000];
+	get_next_line(-42);
+}
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+char	*get_next_line(int fd)
+{
+	char		*result;
+	static char	*str_temp[OPEN_MAX];
+
+	if (fd == -42)
+	{
+		fd = 0;
+		while (fd <= OPEN_MAX - 1)
+		{
+			if (str_temp[fd])
+				free(str_temp[fd]);
+			fd++;
+		}
+		return (NULL);
+	}
+	if (fd < 0 || BUFFER_SIZE <= 0 )
 		return (NULL);
 	str_temp[fd] = ft_stock_text(fd, str_temp[fd]);
+	if (!str_temp[fd])
+		return (NULL);
 	result = ft_append_line(str_temp[fd]);
 	str_temp[fd] = ft_clear_line(str_temp[fd]);
 	return (result);
 }
+
 /*
 #include <stdio.h>
 #include <fcntl.h>
@@ -117,7 +148,7 @@ int main()
 	char	*line;
 	int		i;
 	int		fd1;
-	fd1 = open("./txtfile.txt", O_RDONLY);
+	fd1 = open("multiple_nl.txt", O_RDONLY);
 	//fd1 = open("./txtfile.txt", O_RDONLY);
 	i = 1;
 	while (i < 6)
