@@ -20,7 +20,7 @@ void ft_exit(t_lst *stack, char **tab)
 	i = 0;
 	ft_free(stack);
 	write(2, "Error\n", 6);
-	while (tab[i])
+	while (tab && tab[i])
 	{
 		free(tab[i]);
 		i++;
@@ -46,6 +46,8 @@ int 	ft_amoi(char *str, t_lst *stack, char **tab)
 			sign = -1;
 		i++;
 	}
+	if (!str[i])
+		ft_exit(stack, tab);
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
@@ -113,10 +115,10 @@ int main (int argc, char **argv)
 	//if (!astack)
 	//	return 0;
 	ft_newalgo(&astack, &bstack);
-	printf("astack: ");
-	print_stack(astack);
-	printf("bstack: ");
-	print_stack(bstack);
+	//printf("astack: ");
+	//print_stack(astack);
+	//printf("bstack: ");
+	//print_stack(bstack);
 	//printf("nombre de mouvements : %d", result);
 	i = 0;
 	ft_free(astack);
