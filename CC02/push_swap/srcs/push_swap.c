@@ -29,6 +29,12 @@ void ft_exit(t_lst *stack, char **tab)
 	exit(1);
 }
 
+void check_exit(char *str, t_lst *stack, char **tab, int index)
+{
+	if (!str[index])
+		ft_exit(stack,tab);
+}
+
 int 	ft_amoi(char *str, t_lst *stack, char **tab)
 {
 	long long result;
@@ -38,16 +44,14 @@ int 	ft_amoi(char *str, t_lst *stack, char **tab)
 	sign = 1;
 	result = 0;
 	i = 0;
-	if (!str[i])
-		ft_exit(stack, tab); 
+	check_exit(str,stack,tab,i);	
 	if (str[i] == '+' || str[i] == '-')
 	{
 		if (str[i] == '-')
 			sign = -1;
 		i++;
 	}
-	if (!str[i])
-		ft_exit(stack, tab);
+	check_exit(str,stack,tab,i);	
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
@@ -60,51 +64,32 @@ int 	ft_amoi(char *str, t_lst *stack, char **tab)
 	return ((int) result * sign);
 }
 
-void print_stack(t_lst *head) 
+/*void print_stack(t_lst *head) 
+  {
+  while (head != NULL) 
+  {
+  printf("%d -> ", head->data);
+  head = head->next;
+  }
+  printf("NULL\n");
+  }*/
+
+int ft_is_ordered(t_lst *astack)
 {
-    while (head != NULL) 
+	while (astack -> next)
 	{
-        printf("%d -> ", head->data);
-        head = head->next;
-    }
-    printf("NULL\n");
+		if (astack -> data > astack -> next -> data)
+			return (0);
+		astack = astack -> next;
+	}
+	return (1);
 }
 
-int main (int argc, char **argv)
+void free_tab(char **tab)
 {
-	t_lst *astack;
-	t_lst *bstack;
-	char **tab;
+
 	int i;
 
-	i = 0;
-	bstack = NULL;
-	if (argc <= 1)
-		exit(1);
-	if (argc == 2)
-	{
-		tab = ft_split(argv[1], ' ');
-		if (!tab)
-			ft_exit(0,0);
-	}
-	else
-	{
-		tab = malloc(argc * sizeof(char *));
-		if (!tab)
-			ft_exit(0,0); //que faire dans ce cas ?
-		while (argv[i + 1])
-		{
-			tab[i] = ft_strdup(argv[i + 1]);
-			if (!tab[i])
-				ft_exit(0,tab);
-			// si le malloc du ft_strdup fail on est cense sortir je pense
-			i++;
-		}
-		tab[i] = NULL;
-	}
-	//if (!tab[0]) //pas sur de l'utilite de ce machin
-	//	ft_exit(0, tab);
-	astack = ft_init(tab);
 	i = 0;
 	while (tab[i])
 	{
@@ -112,15 +97,53 @@ int main (int argc, char **argv)
 		i++;
 	}
 	free(tab);
-	//if (!astack)
-	//	return 0;
-	ft_newalgo(&astack, &bstack);
-	//printf("astack: ");
-	//print_stack(astack);
-	//printf("bstack: ");
-	//print_stack(bstack);
-	//printf("nombre de mouvements : %d", result);
+}
+
+char **check_args(int argc, char **argv)
+{
+	int i;
+	char **tab;
+
 	i = 0;
+	tab = malloc(argc * sizeof(char *));
+	if (!tab)
+		ft_exit(0,0);
+	while (argv[i + 1])
+	{
+		tab[i] = ft_strdup(argv[i + 1]);
+		if (!tab[i])
+			ft_exit(0,tab);
+		i++;
+	}
+	tab[i] = NULL;
+	return tab;
+}
+
+int main (int argc, char **argv)
+{
+	t_lst *astack;
+	t_lst *bstack;
+	char **tab;
+
+	if (argc <= 1)
+		exit(1);
+	else if (argc == 2)
+	{
+		tab = ft_split(argv[1], ' ');
+		if (!tab)
+			ft_exit(0,0);
+	}
+	else
+		tab = check_args(argc,argv);
+	bstack = NULL;
+	astack = ft_init(tab);
+	free_tab(tab);
+	if (ft_is_ordered(astack) == 1)
+	{
+		ft_free(astack);
+		exit(1);
+	}
+	ft_newalgo(&astack, &bstack);
 	ft_free(astack);
 	ft_free(bstack);
 }

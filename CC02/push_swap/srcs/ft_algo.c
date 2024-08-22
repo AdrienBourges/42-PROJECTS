@@ -68,142 +68,116 @@ int ft_last(t_lst *stack)
 	return last;
 }
 
+int ft_move_counter_2(int rotate_a, int rotate_b, int r_rotate_a, int r_rotate_b)
+{
+	int double_rotate;
+	int double_rrotate;
+
+	if (rotate_b >= rotate_a && r_rotate_b >= r_rotate_a)
+	{
+		double_rotate = rotate_a;
+		double_rrotate = r_rotate_a;
+		return (double_rotate + double_rrotate + (rotate_b - rotate_a) + (r_rotate_b - r_rotate_a));
+	}
+	else if (rotate_b <= rotate_a && r_rotate_b <= r_rotate_a)
+	{	
+		double_rotate = rotate_b;
+		double_rrotate = r_rotate_b;
+		return (double_rotate + double_rrotate + (rotate_a - rotate_b) + (r_rotate_a - r_rotate_b));
+	}
+	else if (rotate_b >= rotate_a && r_rotate_b <= r_rotate_a)
+	{
+		double_rotate = rotate_a;
+		double_rrotate = r_rotate_b;
+		return (double_rotate + double_rrotate + (rotate_b - rotate_a) + (r_rotate_a - r_rotate_b));
+	}
+	double_rotate = rotate_b;
+	double_rrotate = r_rotate_a;
+	return (double_rotate + double_rrotate + (rotate_a - rotate_b) + (r_rotate_b - r_rotate_a));
+}
+
 int ft_move_counter(int *tab)
 {
-	//A FAIRE NEXT: BIEN VERIFIER QUE LA FONCTION EST CORRECTE EN RAMENANT DU PAPIER 
-	int move_count;
+	//int move_count;
 	int rotate_a;
 	int r_rotate_a;
 	int rotate_b;
 	int r_rotate_b;
-	int double_rotate;
-	int double_rrotate;
-
-// le cumul des move sont dabord: envoyer le nombre au top de la stack a, on compte donc le nombre de rotation (ou reverse rotation) et/ou de swap. Puis on regarde quelle type de rotation on doit effectuer en fonction d’ou on veut placer le nombre et du nombre d’element dans la stack et on compte le nombre. S’il y a des rotations identiques, on fait des doubles rota et ca permet de reduire la somme totale. 
-// afin de reduire la duree du programme on doit set un "optimal_move_count" qui est a 2 pour le premier et dernier nombre de la stack a, a 3 pour le deuxieme et avant dernier etc... si on a un move count optimal on s'arrete et on execute.
-//
+//	int double_rotate;
+	//int double_rrotate;
 
 	rotate_a = 0;
 	r_rotate_a = 0;
 	rotate_b = 0;
 	r_rotate_b = 0;
-	move_count = 0;
+	//move_count = 0;
 	//ici on compte le nombre de move pour mettre le nombre desire au top de la stack A;
 	if (tab[2] > (tab[0] / 2))
 		r_rotate_a = tab[0] - tab[2];
 	else if (tab[2] <= (tab[0] / 2))
 		rotate_a = tab[2];
-	else
-	{
-		// les 2 rotations sont equivalentes en nombre de coup dans le cas d'une stack size paire sur le n/2 +1 element.
-	}
 
 	if (tab[3] > (tab[1] / 2))
 		r_rotate_b = tab[1] - tab[3];
 	else if(tab[3] <= (tab[1] / 2))
 		rotate_b = tab[3];
-	// maintenant on doit compter le nombre de rota dans b et leur type
-
-	if (rotate_b >= rotate_a && r_rotate_b >= r_rotate_a)
-	{
-		double_rotate = rotate_a;
-		double_rrotate = r_rotate_a;
-		move_count = double_rotate + double_rrotate + (rotate_b - rotate_a) + (r_rotate_b - r_rotate_a);
-	}
-	else if (rotate_b <= rotate_a && r_rotate_b <= r_rotate_a)
-	{	
-		double_rotate = rotate_b;
-		double_rrotate = r_rotate_b;
-		move_count = double_rotate + double_rrotate + (rotate_a - rotate_b) + (r_rotate_a - r_rotate_b);
-	}
-	else if (rotate_b >= rotate_a && r_rotate_b <= r_rotate_a)
-	{
-		double_rotate = rotate_a;
-		double_rrotate = r_rotate_b;
-		move_count = double_rotate + double_rrotate + (rotate_b - rotate_a) + (r_rotate_a - r_rotate_b);
-	}
-	else if (rotate_b <= rotate_a && r_rotate_b >= r_rotate_a)
-	{
-		double_rotate = rotate_b;
-		double_rrotate = r_rotate_a;
-		move_count = double_rotate + double_rrotate + (rotate_a - rotate_b) + (r_rotate_b - r_rotate_a);
-	}
-	return move_count;
+	return ft_move_counter_2(rotate_a, rotate_b, r_rotate_a, r_rotate_b);;
 }
 
-void ft_execute(t_lst **astack, t_lst **bstack, int *tab)
+void ft_set_a(int *rotate_a, int *r_rotate_a, int *tab)
+{
+	if (tab[2] > (tab[0] / 2))
+	{
+		*r_rotate_a = tab[0] - tab[2];
+		*rotate_a = 0;
+	}
+	else if (tab[2] <= (tab[0] / 2))
+	{
+		*rotate_a = tab[2];
+		*r_rotate_a = 0;
+	}
+}
+
+void ft_set_b(int *rotate_b, int *r_rotate_b, int *tab)
+{
+	if (tab[3] > (tab[1] / 2))
+	{
+		*r_rotate_b = tab[1] - tab[3];
+		rotate_b = 0;
+	}
+	else if(tab[3] <= (tab[1] / 2))
+	{
+		*rotate_b = tab[3];
+		*r_rotate_b = 0;
+	}
+}
+
+void ft_double_rota (int *rotate1, int *rotate2, t_lst **astack, t_lst **bstack)
+{
+	int double_rotate;
+
+	double_rotate = *rotate1;
+	*rotate2 -= double_rotate;
+	while (double_rotate-- > 0)
+		ft_rrotate(astack, bstack);
+	*rotate1 = 0;
+}
+
+
+void ft_double_rrota (int *rotate1, int *rotate2, t_lst **astack, t_lst **bstack)
+{
+	int double_rotate;
+
+	double_rotate = *rotate1;
+	*rotate2 -= double_rotate;
+	while (double_rotate-- > 0)
+		ft_rreverse_rotate(astack, bstack);
+	*rotate1 = 0;
+}
+
+void ft_rota(int rotate_a, int rotate_b, t_lst **astack, t_lst **bstack)
 {
 
-	int rotate_a;
-	int r_rotate_a;
-	int rotate_b;
-	int r_rotate_b;
-	int double_rotate;
-	int double_rrotate;
-
-	rotate_a = 0;
-	r_rotate_a = 0;
-	rotate_b = 0;
-	r_rotate_b = 0;
-	double_rotate = 0;
-	double_rrotate = 0;
-	if (tab[2] > (tab[0] / 2))
-		r_rotate_a = tab[0] - tab[2];
-	else if (tab[2] <= (tab[0] / 2))
-		rotate_a = tab[2];
-
-	if (tab[3] > (tab[1] / 2))
-		r_rotate_b = tab[1] - tab[3];
-	else if(tab[3] <= (tab[1] / 2))
-		rotate_b = tab[3];
-	// maintenant on doit compter le nombre de rota dans b et leur type
-
-	if (rotate_b >= rotate_a && r_rotate_b >= r_rotate_a)
-	{
-		double_rotate = rotate_a;
-		double_rrotate = r_rotate_a;
-		rotate_a = 0;
-		r_rotate_a = 0;
-		rotate_b -= double_rotate;
-		r_rotate_b -= double_rrotate;
-	}
-	else if (rotate_b <= rotate_a && r_rotate_b <= r_rotate_a)
-	{	
-		double_rotate = rotate_b;
-		double_rrotate = r_rotate_b;
-		rotate_b = 0;
-		r_rotate_b = 0;
-		rotate_a -= double_rotate;
-		r_rotate_a -= double_rrotate;
-	}
-	else if (rotate_b >= rotate_a && r_rotate_b <= r_rotate_a)
-	{
-		double_rotate = rotate_a;
-		double_rrotate = r_rotate_b;
-		rotate_a = 0;
-		r_rotate_b = 0;
-		rotate_b -= double_rotate;
-		r_rotate_a -= double_rrotate;
-	}
-	else if (rotate_b <= rotate_a && r_rotate_b >= r_rotate_a)
-	{
-		double_rotate = rotate_b;
-		double_rrotate = r_rotate_a;
-		rotate_b = 0;
-		r_rotate_a = 0;
-		rotate_a -= double_rotate;
-		r_rotate_b -= double_rrotate;
-	}
-	while (double_rotate > 0)
-	{
-		ft_rrotate(astack,bstack);
-		double_rotate--;
-	}
-	while (double_rrotate > 0)
-	{
-		ft_rreverse_rotate(astack, bstack);
-		double_rrotate--;
-	}
 	while (rotate_a > 0)
 	{
 		ft_rotate(astack, 'a');
@@ -214,6 +188,10 @@ void ft_execute(t_lst **astack, t_lst **bstack, int *tab)
 		ft_rotate(bstack, 'b');
 		rotate_b--;
 	}
+}
+
+void ft_r_rota(int r_rotate_a, int r_rotate_b, t_lst **astack, t_lst **bstack)
+{
 	while (r_rotate_a > 0)
 	{
 		ft_reverse_rotate(astack, 'a');
@@ -225,6 +203,45 @@ void ft_execute(t_lst **astack, t_lst **bstack, int *tab)
 		r_rotate_b--;
 	}
 	ft_push_b(astack, bstack);
+}
+
+
+void ft_execute(t_lst **astack, t_lst **bstack, int *tab)
+{
+	// faire une struct est surement la solution
+	int rotate_a;
+	int r_rotate_a;
+	int rotate_b;
+	int r_rotate_b;
+
+	rotate_a = 0;
+	r_rotate_a = 0;
+	rotate_b = 0;
+	r_rotate_b = 0;
+	ft_set_a(&rotate_a, &r_rotate_a, tab);
+	ft_set_b(&rotate_b, &r_rotate_b, tab);
+	if (rotate_b >= rotate_a && r_rotate_b >= r_rotate_a)
+	{
+		ft_double_rota(&rotate_a, &rotate_b, astack, bstack);
+		ft_double_rrota(&r_rotate_a, &r_rotate_b, astack, bstack);
+	}
+	else if (rotate_b <= rotate_a && r_rotate_b <= r_rotate_a)
+	{	
+		ft_double_rota(&rotate_b, &rotate_a, astack, bstack);
+		ft_double_rrota(&r_rotate_b, &r_rotate_a, astack, bstack);
+	}
+	else if (rotate_b >= rotate_a && r_rotate_b <= r_rotate_a)
+	{	
+		ft_double_rota(&rotate_a, &rotate_b, astack, bstack);
+		ft_double_rrota(&r_rotate_b, &r_rotate_a, astack, bstack);
+	}
+	else if (rotate_b <= rotate_a && r_rotate_b >= r_rotate_a)
+	{
+		ft_double_rota(&rotate_b, &rotate_a, astack, bstack);
+		ft_double_rrota(&r_rotate_a, &r_rotate_b, astack, bstack);
+	}
+	ft_rota(rotate_a, rotate_b, astack, bstack);
+	ft_r_rota(r_rotate_a, r_rotate_b, astack, bstack);
 }
 
 
@@ -254,16 +271,22 @@ void ft_execute(t_lst **astack, t_lst **bstack, int *tab)
 		r_rotate_b = tab[1] - tab[3];
 	else if(tab[3] <= (tab[1] / 2))
 		rotate_b = tab[3];
-
-
 }*/
 
 
+void ft_sort_a_2(int pos_min, t_lst **astack)
+{
+	if (pos_min == 1)
+		ft_rotate(astack, 'a');
+	if (pos_min == 2)
+	{
+		ft_swap(*astack,'a');
+		ft_reverse_rotate(astack,'a');
+	}
+}
+
 void ft_sort_a(t_lst **astack)
 {
-	// on doit reorganiser les 3 elements de la stack a
-	// 6 cas d'organisations possibles
-	
 	int max;
 	int pos_max;
 	int min;
@@ -282,15 +305,7 @@ void ft_sort_a(t_lst **astack)
 			ft_swap(*astack, 'a');
 	}
 	if (pos_max == 0)
-	{
-		if (pos_min == 1)
-			ft_rotate(astack, 'a');
-		if (pos_min == 2)
-		{
-			ft_swap(*astack,'a');
-			ft_reverse_rotate(astack,'a');
-		}
-	}
+		ft_sort_a_2(pos_min, astack);
 }	
 
 void ft_repush(t_lst **astack, t_lst **bstack)
