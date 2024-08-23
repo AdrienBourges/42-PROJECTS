@@ -205,9 +205,16 @@ void ft_r_rota(int r_rotate_a, int r_rotate_b, t_lst **astack, t_lst **bstack)
 	ft_push_b(astack, bstack);
 }
 
+typedef struct s_exec_data { 
+	int rotate_a;
+	int r_rotate_a;
+	int rotate_b;
+	int r_rotate_b;
+	} t_exec_data;
 
 void ft_execute(t_lst **astack, t_lst **bstack, int *tab)
 {
+
 	// faire une struct est surement la solution
 	int rotate_a;
 	int r_rotate_a;
@@ -218,6 +225,8 @@ void ft_execute(t_lst **astack, t_lst **bstack, int *tab)
 	r_rotate_a = 0;
 	rotate_b = 0;
 	r_rotate_b = 0;
+	//t_exec_data data;
+
 	ft_set_a(&rotate_a, &r_rotate_a, tab);
 	ft_set_b(&rotate_b, &r_rotate_b, tab);
 	if (rotate_b >= rotate_a && r_rotate_b >= r_rotate_a)
@@ -245,32 +254,39 @@ void ft_execute(t_lst **astack, t_lst **bstack, int *tab)
 }
 
 
-/*void ft_execute(t_lst **astack, t_lst **bstack, int *tab)
+/*void ft_execute2(t_lst **astack, t_lst **bstack, int *tab)
 {
+	t_exec_data data;
 
-	int rotate_a;
-	int r_rotate_a;
-	int rotate_b;
-	int r_rotate_b;
-
-	rotate_a = 0;
-	r_rotate_a = 0;
-	rotate_b = 0;
-	r_rotate_b = 0;
-	//ici on compte le nombre de move pour mettre le nombre desire au top de la stack A;
-	if (tab[2] > (tab[0] / 2))
-		r_rotate_a = tab[0] - tab[2];
-	else if (tab[2] <= (tab[0] / 2))
-		rotate_a = tab[2];
-	else
+	data.rotate_a = 0;
+	data.r_rotate_a = 0;
+	data.rotate_b = 0;
+	data.r_rotate_b = 0;
+	ft_set_a(&data.rotate_a, &data.r_rotate_a, tab);
+	ft_set_b(&data.rotate_b, &data.r_rotate_b, tab);
+	if (data.rotate_b >= data.rotate_a && data.r_rotate_b >= data.r_rotate_a)
 	{
-		// les 2 rotations sont equivalentes en nombre de coup dans le cas d'une stack size paire sur le n/2 +1 element.
+		ft_double_rota(&data.rotate_a, &data.rotate_b, astack, bstack);
+		ft_double_rrota(&data.r_rotate_a, &data.r_rotate_b, astack, bstack);
 	}
+	else if (data.rotate_b <= data.rotate_a && data.r_rotate_b <= data.r_rotate_a)
+	{	
+		ft_double_rota(&data.rotate_b, &data.rotate_a, astack, bstack);
+		ft_double_rrota(&data.r_rotate_b, &data.r_rotate_a, astack, bstack);
+	}
+	else if (data.rotate_b >= data.rotate_a && data.r_rotate_b <= data.r_rotate_a)
+	{	
+		ft_double_rota(&data.rotate_a, &data.rotate_b, astack, bstack);
+		ft_double_rrota(&data.r_rotate_b, &data.r_rotate_a, astack, bstack);
+	}
+	else if (data.rotate_b <= data.rotate_a && data.r_rotate_b >= data.r_rotate_a)
+	{
+		ft_double_rota(&data.rotate_b, &data.rotate_a, astack, bstack);
+		ft_double_rrota(&data.r_rotate_a, &data.r_rotate_b, astack, bstack);
+	}
+	ft_rota(data.rotate_a, data.rotate_b, astack, bstack);
+	ft_r_rota(data.r_rotate_a, data.r_rotate_b, astack, bstack);
 
-	if (tab[3] > (tab[1] / 2))
-		r_rotate_b = tab[1] - tab[3];
-	else if(tab[3] <= (tab[1] / 2))
-		rotate_b = tab[3];
 }*/
 
 
@@ -308,17 +324,25 @@ void ft_sort_a(t_lst **astack)
 		ft_sort_a_2(pos_min, astack);
 }	
 
+void ft_repush2(int pos_max_b, int size_b, t_lst **bstack)
+{
+	if (pos_max_b <= size_b / 2)
+	{
+		while (pos_max_b-- > 0)
+			ft_rotate(bstack, 'b');
+	}
+	else
+	{
+		while (pos_max_b++ < size_b)
+			ft_reverse_rotate(bstack, 'b');
+	}
+}
+
 void ft_repush(t_lst **astack, t_lst **bstack)
 {
-	// on doit dabord organiser bstack en prenant la pos du max, la size de la stack pour ajuster le nombre de rotate ou de r_rotate
-	// puis on repush en checkant a quel moment ou doit r_rotate pour repasser le dernier element de astack au bon endroit
-
 	int size_b;
 	int max_b;
-	int max_a;
-	int min_a;
 	int pos_max_b;
-	int mid_a;
 	int tab[3];
 	int i;
 
@@ -326,80 +350,33 @@ void ft_repush(t_lst **astack, t_lst **bstack)
 		return ;
 	size_b = ft_stacksize(*bstack);
 	max_b = ft_max(*bstack);
-	max_a = ft_max(*astack);
-	min_a = ft_min(*astack);
 	pos_max_b = ft_findpos(*bstack, max_b);
-	mid_a = (*astack) -> next -> data;
-	tab[0] = max_a;
-	tab[1] = mid_a;
-	tab[2] = min_a;
-
-	if (pos_max_b <= size_b / 2)
-	{
-		while (pos_max_b > 0)
-		{
-			ft_rotate(bstack, 'b');
-			pos_max_b--;
-		}
-	}
-	else
-	{
-		while (pos_max_b < size_b)
-		{
-			ft_reverse_rotate(bstack, 'b');
-			pos_max_b++;
-		}
-	}
+	tab[0] = ft_max(*astack);
+	tab[1] = (*astack) -> next -> data;
+	tab[2] = ft_min(*astack);
+	ft_repush2(pos_max_b, size_b, bstack);
 	i = 0;
 	while(i < 3)
 	{
 		while (bstack && (*bstack) && (*bstack)-> data > tab[i])
-		{
 			ft_push_a(astack, bstack);
-		}
 		i++;
 		ft_reverse_rotate(astack,'a');
 	}
 	while (*bstack)
-	{
 		ft_push_a(astack, bstack);
-	}
 }
 
-
-void ft_newalgo(t_lst **astack, t_lst **bstack)
+void ft_init_bstack_and_tabs(t_lst **astack, t_lst **bstack, int **true_tab, int **temp_tab)
 {
-	// je crois qu'il y a un probleme sur les nbr_index qui sont mal reset, update: en princpe c'est fix
-	int move_count;
-	int nbr_index_a;
-	int nbr_index_b;
-	int size_a;
-	int size_b;
-	int number;
-	t_lst *tmp;
-	t_lst *tmp2;
-	t_lst *tmp3;
-	int *true_tab;
-	int *temp_tab;
-	int max_b;
-	int pos_max_b;
-	int temp_counter;
-	int first_b;
-	int last_b;
-//	int result;
-
-	//result = 0;
-	true_tab = malloc(sizeof(int) * 4); // tableau de la forme: {size_a, size_b, index_a, index_b};
-	if (!true_tab)
-	{
+	*true_tab = malloc(sizeof(int) * 4); // tableau de la forme: {size_a, size_b, index_a, index_b};
+	if (!*true_tab)
 		ft_exit(*astack, 0);
-	}
-	temp_tab = malloc(sizeof(int) * 4);
-	if (!temp_tab)
+	*temp_tab = malloc(sizeof(int) * 4);
+	if (!*temp_tab)
 	{
-		free(true_tab);
+		free(*true_tab);
 		ft_exit(*astack, 0);
-		//ft_exit(astack, bstack, true_tab, temp_tab);
 	}
 	if (ft_stacksize(*astack) > 3 && ft_stacksize(*astack) != 4)
 	{
@@ -408,100 +385,135 @@ void ft_newalgo(t_lst **astack, t_lst **bstack)
 	}
 	else if (ft_stacksize(*astack) == 4)
 		ft_push_b(astack, bstack);
+}
 
-	while (ft_stacksize(*astack) > 3)
+void ft_tabs(t_lst **astack, t_lst **bstack, int *true_tab, int *temp_tab)
+{
+	int size_a;
+	int size_b;
+
+	size_a = ft_stacksize(*astack);
+	size_b = ft_stacksize(*bstack);
+	true_tab[0] = size_a;
+	true_tab[1] = size_b;
+	temp_tab[0] = size_a;
+	temp_tab[1] = size_b;
+}
+
+void ft_replace(int *true_tab, int *temp_tab, int *move_count)
+{
+	int temp_counter;
+
+	temp_counter = ft_move_counter(temp_tab);
+	if (*move_count > temp_counter)
 	{
-		number = (*astack) -> data;
-		nbr_index_a = 0;
-		nbr_index_b = 0;
-		size_a = ft_stacksize(*astack);
-		size_b = ft_stacksize(*bstack);
-		true_tab[0] = size_a;
-		true_tab[1] = size_b;
-		temp_tab[0] = size_a;
-		temp_tab[1] = size_b;
-		max_b = ft_max(*bstack);
-		pos_max_b = ft_findpos(*bstack, max_b);
-		tmp2 = *bstack;
-		tmp3 = *astack;
-		first_b = (*bstack) -> data;
-		last_b = ft_last(*bstack);
-		move_count = 10000;
-
-		while(*astack)
-		{
-			while ((*bstack) -> next)
-			{
-				tmp = (*bstack) -> next;  
-				if (number > max_b || number < ft_min(*bstack))
-				{
-					temp_tab[2] = nbr_index_a;
-					temp_tab[3] = pos_max_b;
-					temp_counter = ft_move_counter(temp_tab);
-					if (move_count > temp_counter)
-					{
-						move_count = temp_counter;
-						true_tab[2] = temp_tab[2];
-						true_tab[3] = temp_tab[3];
-						// pour opti on doit se stop si on a un nombre de coup optimal(exemple :un seul coup puis 2 coups puis 3 coups..., et a partir de la moitie de la size a on decremente notre indice de coup opti. a implementer plus tard peut etre)
-					}
-					break;
-				}
-				else if (number < (*bstack) -> data && number > tmp -> data)
-				{
-					temp_tab[2] = nbr_index_a;
-					temp_tab[3] = nbr_index_b + 1;
-					temp_counter = ft_move_counter(temp_tab);
-					//true_tab = temp_tab;
-					if (move_count > temp_counter)
-					{
-						move_count = temp_counter;
-						true_tab[2] = temp_tab[2];
-						true_tab[3] = temp_tab[3];
-					}
-					break;
-					//on rentre la position dans notre double tableau
-					//on calcule le nombre de coup avec notre super fonction
-					//pour garder en memoire le bon double tableau d'information on peut creer un double tableau temp qu'on modifie a chaque fois. Si ce double tableau bat le tableau en place, on le remplace simplement !
-					//a la fin on execute une autre super fonction qui prend en parametre le bon double tableau et effectue les mouvements correspondants
-				}
-				else if (number >  first_b && number < last_b)
-				{
-					temp_tab[2] = nbr_index_a;
-					temp_tab[3] = 0;
-					temp_counter = ft_move_counter(temp_tab);	
-					if (move_count > temp_counter)
-					{
-						move_count = temp_counter;
-						true_tab[2] = temp_tab[2];
-						true_tab[3] = temp_tab[3];
-					}
-					break;
-				}
-				else
-				{
-					*bstack = (*bstack) -> next;
-					nbr_index_b++;
-				}
-			}
-			*astack = (*astack) -> next;
-			if (*astack)
-				number = (*astack) -> data;
-			*bstack = tmp2;
-			nbr_index_a++;
-			nbr_index_b = 0;
-		}
-		*astack = tmp3;// bien faire gaffe aux reset de pointeurs sur les debuts de liste a chaque fois	
-		//ft_push_b(astack, bstack);
-		
-		ft_execute(astack, bstack, true_tab);
-		//result+= move_count + 1;
+		*move_count = temp_counter;
+		true_tab[2] = temp_tab[2];
+		true_tab[3] = temp_tab[3];
 	}
+}
+
+typedef struct s_algo_data {
+    int move_count;
+    int nbr_index_a;
+    int nbr_index_b;
+	int number;
+} t_algo_data;
+
+void ft_reinit_data(t_algo_data *data)
+{
+	data -> nbr_index_a = 0;
+	data -> nbr_index_b = 0;
+	data -> move_count = 10000;
+}
+
+void ft_newalgo2(int *true_tab, int *temp_tab, t_algo_data *data, t_lst **bstack)
+{
+	temp_tab[2] = data -> nbr_index_a;
+	temp_tab[3] = ft_findpos(*bstack, ft_max(*bstack));
+	ft_replace(true_tab, temp_tab, &data -> move_count);
+}
+
+
+void ft_newalgo3(int *true_tab, int *temp_tab, t_algo_data *data)
+{
+	temp_tab[2] = data -> nbr_index_a;
+	temp_tab[3] = data -> nbr_index_b + 1;
+	ft_replace(true_tab, temp_tab, &data -> move_count);
+}
+
+void ft_newalgo4(int *true_tab, int *temp_tab, t_algo_data *data)
+{
+	temp_tab[2] = data -> nbr_index_a;
+	temp_tab[3] = 0;
+	ft_replace(true_tab, temp_tab, &data -> move_count);
+}
+
+void ft_decision_bstack(t_lst **bstack, int *true_tab, int *temp_tab, t_algo_data *data)
+{
+	while ((*bstack) -> next)
+	{
+		if (data->number > ft_max(*bstack) || data -> number < ft_min(*bstack))
+		{
+			ft_newalgo2(true_tab, temp_tab, data, bstack);  
+			break;
+		}
+		else if (data -> number < (*bstack) -> data && data -> number > (*bstack) -> next -> data)
+		{
+			ft_newalgo3(true_tab, temp_tab, data);  
+			break;
+		}
+		else if (data -> number >  (*bstack) -> data && data -> number	< ft_last(*bstack))
+		{
+			ft_newalgo4(true_tab, temp_tab, data);
+			break;
+		}
+		*bstack = (*bstack) -> next;
+		data -> nbr_index_b++;
+	 }
+}
+
+void ft_finish( t_lst **astack, t_lst **bstack, int *true_tab, int *temp_tab)
+{
 	ft_sort_a(astack);
 	ft_repush(astack, bstack);
 	free(temp_tab);
 	free(true_tab);
-//	return result;	
+}
+
+void ft_reinit_data2(t_algo_data *data)
+{
+	data -> nbr_index_a++;
+	data -> nbr_index_b = 0;
+}
+
+void ft_newalgo(t_lst **astack, t_lst **bstack)
+{
+	t_algo_data data;
+	t_lst *tmp2;
+	t_lst *tmp3;
+	int *true_tab;
+	int *temp_tab;
+
+	ft_init_bstack_and_tabs(astack, bstack, &true_tab, &temp_tab);
+	while (ft_stacksize(*astack) > 3)
+	{
+		ft_tabs(astack, bstack, true_tab, temp_tab);
+		ft_reinit_data(&data);
+		tmp2 = *bstack;
+		tmp3 = *astack;
+		while(*astack)
+		{
+			data.number = (*astack) -> data;
+			ft_decision_bstack(bstack, true_tab, temp_tab, &data);
+			*astack = (*astack) -> next;
+			*bstack = tmp2;
+			ft_reinit_data2(&data);
+		}
+		*astack = tmp3;	
+		ft_execute(astack, bstack, true_tab);
+	}
+	ft_finish(astack, bstack, true_tab, temp_tab);
 }
 
 
