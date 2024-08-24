@@ -1,10 +1,10 @@
 #include "../includes/ft_pushswap.h"
 
-t_lst *ft_newnode(int data, t_lst *stack, char **tab)
+t_lst	*ft_newnode(int data, t_lst *stack, char **tab)
 {
-	t_lst *result;
+	t_lst	*result;
 
-	result = malloc (sizeof(t_lst));
+	result = malloc(sizeof(t_lst));
 	if (!result)
 		ft_exit(stack, tab);
 	result->data = data;
@@ -14,8 +14,8 @@ t_lst *ft_newnode(int data, t_lst *stack, char **tab)
 
 void	ft_add_node(t_lst **head, int data, char **tab)
 {
-	t_lst *node;
-	t_lst *tmp;
+	t_lst	*node;
+	t_lst	*tmp;
 
 	node = ft_newnode(data, *head, tab);
 	if (!node)
@@ -28,12 +28,12 @@ void	ft_add_node(t_lst **head, int data, char **tab)
 	tmp = *head;
 	while (tmp -> next)
 		tmp = tmp -> next;
-	tmp -> next = node;	
+	tmp -> next = node;
 }
 
-void ft_checkdupes(t_lst *stack, int number, char **tab)
+void	ft_checkdupes(t_lst *stack, int number, char **tab)
 {
-	t_lst *tmp;
+	t_lst	*tmp;
 
 	tmp = stack;
 	while (stack)
@@ -47,11 +47,11 @@ void ft_checkdupes(t_lst *stack, int number, char **tab)
 	}
 }
 
-t_lst *ft_init(char **tab)
+t_lst	*ft_init(char **tab)
 {
-	t_lst *result;
-	int i;
-	int number;
+	t_lst	*result;
+	int		i;
+	int		number;
 
 	result = NULL;
 	i = 0;
@@ -64,4 +64,3 @@ t_lst *ft_init(char **tab)
 	}
 	return (result);
 }
-

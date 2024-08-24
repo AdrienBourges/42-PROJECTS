@@ -1,9 +1,8 @@
 #include "../includes/ft_pushswap.h"
-#include <stdio.h>
 
-void ft_free(t_lst *stack)
+void	ft_free(t_lst *stack)
 {
-	t_lst *tmp;
+	t_lst	*tmp;
 
 	while (stack)
 	{
@@ -13,9 +12,9 @@ void ft_free(t_lst *stack)
 	}
 }
 
-void ft_exit(t_lst *stack, char **tab)
+void	ft_exit(t_lst *stack, char **tab)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	ft_free(stack);
@@ -29,29 +28,29 @@ void ft_exit(t_lst *stack, char **tab)
 	exit(1);
 }
 
-void check_exit(char *str, t_lst *stack, char **tab, int index)
+void	check_exit(char *str, t_lst *stack, char **tab, int index)
 {
 	if (!str[index])
-		ft_exit(stack,tab);
+		ft_exit(stack, tab);
 }
 
-int 	ft_amoi(char *str, t_lst *stack, char **tab)
+int	ft_amoi(char *str, t_lst *stack, char **tab)
 {
-	long long result;
-	int i;
-	int sign;
+	long long	result;
+	int			i;
+	int			sign;
 
 	sign = 1;
 	result = 0;
 	i = 0;
-	check_exit(str,stack,tab,i);	
+	check_exit(str, stack, tab, i);
 	if (str[i] == '+' || str[i] == '-')
 	{
 		if (str[i] == '-')
 			sign = -1;
 		i++;
 	}
-	check_exit(str,stack,tab,i);	
+	check_exit(str, stack, tab, i);
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
@@ -64,17 +63,7 @@ int 	ft_amoi(char *str, t_lst *stack, char **tab)
 	return ((int) result * sign);
 }
 
-/*void print_stack(t_lst *head) 
-  {
-  while (head != NULL) 
-  {
-  printf("%d -> ", head->data);
-  head = head->next;
-  }
-  printf("NULL\n");
-  }*/
-
-int ft_is_ordered(t_lst *astack)
+int	ft_is_ordered(t_lst *astack)
 {
 	while (astack -> next)
 	{
@@ -85,10 +74,9 @@ int ft_is_ordered(t_lst *astack)
 	return (1);
 }
 
-void free_tab(char **tab)
+void	free_tab(char **tab)
 {
-
-	int i;
+	int	i;
 
 	i = 0;
 	while (tab[i])
@@ -99,31 +87,31 @@ void free_tab(char **tab)
 	free(tab);
 }
 
-char **check_args(int argc, char **argv)
+char	**check_args(int argc, char **argv)
 {
-	int i;
-	char **tab;
+	int		i;
+	char	**tab;
 
 	i = 0;
 	tab = malloc(argc * sizeof(char *));
 	if (!tab)
-		ft_exit(0,0);
+		ft_exit(0, 0);
 	while (argv[i + 1])
 	{
 		tab[i] = ft_strdup(argv[i + 1]);
 		if (!tab[i])
-			ft_exit(0,tab);
+			ft_exit(0, tab);
 		i++;
 	}
 	tab[i] = NULL;
-	return tab;
+	return (tab);
 }
 
-int main (int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_lst *astack;
-	t_lst *bstack;
-	char **tab;
+	t_lst	*astack;
+	t_lst	*bstack;
+	char	**tab;
 
 	if (argc <= 1)
 		exit(1);
@@ -131,10 +119,10 @@ int main (int argc, char **argv)
 	{
 		tab = ft_split(argv[1], ' ');
 		if (!tab)
-			ft_exit(0,0);
+			ft_exit(0, 0);
 	}
 	else
-		tab = check_args(argc,argv);
+		tab = check_args(argc, argv);
 	bstack = NULL;
 	astack = ft_init(tab);
 	free_tab(tab);
