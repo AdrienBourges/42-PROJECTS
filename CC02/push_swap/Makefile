@@ -1,14 +1,21 @@
 NAME = push_swap
 CC = gcc
 RM = rm -f
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror
 LIBFTDIR = libft/
 OBJ_DIR = obj/
 
 SRC_1 = srcs/push_swap.c
 SRC_2 = srcs/ft_algo.c \
-        srcs/ft_free_and_init.c \
-        srcs/ft_movements.c
+        srcs/ft_linked_list.c \
+        srcs/ft_movements.c \
+		srcs/ft_movements2.c \
+		srcs/ft_algo2.c \
+	  	srcs/ft_algo4.c \
+	   	srcs/ft_algo6.c \
+		srcs/ft_algo3.c \
+	   	srcs/ft_algo5.c \
+	   	srcs/ft_free_exit.c 
 
 OBJ_1 = $(SRC_1:srcs/%.c=$(OBJ_DIR)%.o)
 OBJ_2 = $(SRC_2:srcs/%.c=$(OBJ_DIR)%.o)

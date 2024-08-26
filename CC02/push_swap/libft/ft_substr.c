@@ -3,90 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgaudin <lgaudin@student.42malaga.com>     +#+  +:+       +#+        */
+/*   By: abourges <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/11 17:08:40 by lgaudin           #+#    #+#             */
-/*   Updated: 2023/04/15 17:47:51 by lgaudin          ###   ########.fr       */
+/*   Created: 2024/05/13 17:55:46 by abourges          #+#    #+#             */
+/*   Updated: 2024/05/21 12:39:12 by abourges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "libft.h"
+#include <string.h>
 
-static size_t	ft_strlen(char const *str)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t	count;
+	char	*result;
+	size_t	size;
+	size_t	i;
 
-	count = 0;
-	while (str[count])
-		count++;
-	return (count);
-}
-
-static void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	size_t			count;
-	unsigned char	*dest_copy;
-	unsigned char	*src_copy;
-
-	if (!dest && !src)
-		return (0);
-	count = 0;
-	dest_copy = (unsigned char *)dest;
-	src_copy = (unsigned char *)src;
-	while (count < n)
+	size = 0;
+	if (s && ft_strlen(s) > start)
 	{
-		dest_copy[count] = (unsigned char)src_copy[count];
-		count++;
+		while (s[start + size] && size < len)
+			size++;
 	}
-	return (dest);
-}
-
-static char	*ft_strdup(char *src)
-{
-	int		length;
-	char	*copy;
-
-	length = 0;
-	while (src[length])
-		length++;
-	copy = malloc(sizeof(char) * length + 1);
-	if (!copy)
-		return (0);
-	length = 0;
-	while (src[length])
+	result = malloc(size + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	while (i < size)
 	{
-		copy[length] = src[length];
-		length++;
+		result[i] = s[start + i];
+		i++;
 	}
-	copy[length] = '\0';
-	return (copy);
+	result[i] = '\0';
+	return (result);
 }
-
-char	*ft_substr(const char *s, unsigned int start, size_t len)
-{
-	char	*ret;
-
-	if (!s)
-		return (0);
-	if (ft_strlen(s) < start)
-		return (ft_strdup(""));
-	if (ft_strlen(s) < start + len)
-		len = ft_strlen(s) - start;
-	ret = malloc(sizeof(char) * (len + 1));
-	if (!ret)
-		return (0);
-	ft_memcpy(ret, s + start, len);
-	ret[len] = 0;
-	return (ret);
-}
-
-// int main(void)
-// {
-//  char *str = "i just want this part #############";
-//  size_t size = 22;
-//  char *ret = ft_substr(str, 35, size);
-// 	printf("str: %s\n", str);
-// 	printf("ret: %s\n", ret);
-// 	return (0);
-// }

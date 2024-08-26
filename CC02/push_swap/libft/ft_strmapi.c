@@ -3,47 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgaudin <lgaudin@student.42malaga.com>     +#+  +:+       +#+        */
+/*   By: abourges <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/12 14:48:25 by lgaudin           #+#    #+#             */
-/*   Updated: 2023/04/13 14:31:09 by lgaudin          ###   ########.fr       */
+/*   Created: 2024/05/13 17:53:50 by abourges          #+#    #+#             */
+/*   Updated: 2024/05/13 17:53:52 by abourges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-
-// char	f(unsigned int i, char c)
-// {
-// 	return (i + '0');
-// }
+#include "libft.h"
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	int		i;
-	char	*result;
+	unsigned int	i;
+	char			*result;
 
+	i = 0;
 	if (!s || !f)
-		return (0);
-	i = 0;
-	while (s[i])
-		i++;
-	result = malloc((i + 1) * sizeof(char));
+		return (NULL);
+	result = malloc(ft_strlen(s) + 1);
 	if (!result)
-		return (0);
-	i = 0;
+		return (NULL);
 	while (s[i])
 	{
 		result[i] = f(i, s[i]);
 		i++;
 	}
-	result[i] = 0;
+	result[i] = '\0';
 	return (result);
 }
-
-// int	main(void)
-// {
-// 	char string[] = "bonjour";
-// 	printf("%s got turned into %s\n", string, ft_strmapi(string, f));
-// 	return (0);
-// }

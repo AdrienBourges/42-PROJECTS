@@ -3,47 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgaudin <lgaudin@student.42malaga.com>     +#+  +:+       +#+        */
+/*   By: abourges <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/10 19:08:04 by lgaudin           #+#    #+#             */
-/*   Updated: 2023/04/12 21:15:21 by lgaudin          ###   ########.fr       */
+/*   Created: 2024/05/13 17:50:04 by abourges          #+#    #+#             */
+/*   Updated: 2024/05/13 17:50:09 by abourges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	size_t			i;
-	unsigned char	*src_pointer;
-	unsigned char	*dest_pointer;
+	unsigned const char	*temp;
+	unsigned char		*temp2;
 
-	if (src == NULL && dest == NULL)
+	if (!dest && !src)
 		return (0);
-	i = 0;
-	src_pointer = (unsigned char *)src;
-	dest_pointer = (unsigned char *)dest;
-	if (dest_pointer > src_pointer)
-		while (n-- != 0)
-			dest_pointer[n] = src_pointer[n];
+	temp = src;
+	temp2 = dest;
+	if (dest > src)
+	{
+		temp = src + n;
+		temp2 = dest + n;
+		while (n-- > 0)
+			*--temp2 = *--temp;
+	}
 	else
 	{
-		while (i < n)
-		{
-			dest_pointer[i] = src_pointer[i];
-			i++;
-		}
+		while (n-- > 0)
+			*temp2++ = *temp++;
 	}
 	return (dest);
 }
-
-// int	main(void)
-// {
-// 	char	str[] = "Start stop";
-
-// 	printf("The string: %s\n", str);
-// 	ft_memmove(str, str + 2, 3 * sizeof(char));
-// 	printf("New string: %s\n", str);
-
-// 	return (0);
-// }

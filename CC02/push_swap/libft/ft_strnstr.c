@@ -3,51 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgaudin <lgaudin@student.42malaga.com>     +#+  +:+       +#+        */
+/*   By: abourges <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/06 11:12:48 by lgaudin           #+#    #+#             */
-/*   Updated: 2023/04/12 21:17:49 by lgaudin          ###   ########.fr       */
+/*   Created: 2024/05/13 18:11:34 by abourges          #+#    #+#             */
+/*   Updated: 2024/05/13 18:11:36 by abourges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <string.h>
+#include "libft.h"
 
 char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
-	int	i;
-	int	j;
+	size_t	i;
+	size_t	j;
 
-	if (little[0] == '\0' || (len == 0 && !big))
-		return ((char *)big);
 	i = 0;
-	while (big[i] != '\0' && (size_t)i < len)
+	if (!*little)
+		return ((char *)big);
+	while (big[i] && i < len)
 	{
 		j = 0;
-		while (little[j] != '\0' && (size_t)i + j < len)
+		if (big[i] == little[j])
 		{
-			if (big[i + j] == little[j])
+			while (big[i] == little[j] && i < len && little[j])
 			{
+				i++;
 				j++;
 			}
-			else
-				break ;
-		}
-		if (little[j] == '\0')
-		{
-			return ((char *)big + i);
+			if (!little[j])
+				return ((char *)big + i - j);
+			i = i - j;
 		}
 		i++;
 	}
-	return (0);
+	return (NULL);
 }
-
-// int	main(void)
-// {
-// 	char	first[] = "Bonjour";
-// 	char	second[] = "jour";
-// 	int		limit = 10;
-// 	printf("strstr returned %s\n", strnstr(first, second, limit));
-// 	printf("ft_strstr returned %s\n", ft_strnstr(first, second, limit));
-// 	return (0);
-// }

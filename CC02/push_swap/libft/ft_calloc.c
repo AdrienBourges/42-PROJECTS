@@ -3,28 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgaudin <lgaudin@student.42malaga.com>     +#+  +:+       +#+        */
+/*   By: abourges <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/11 16:47:02 by lgaudin           #+#    #+#             */
-/*   Updated: 2023/04/12 20:47:03 by lgaudin          ###   ########.fr       */
+/*   Created: 2024/05/13 18:18:42 by abourges          #+#    #+#             */
+/*   Updated: 2024/05/13 18:18:47 by abourges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-void	*ft_calloc(size_t nelem, size_t elsize)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	size_t			i;
-	unsigned char	*pointer;
+	void	*result;
 
-	pointer = malloc(nelem * elsize);
-	if (!pointer)
-		return (0);
-	i = 0;
-	while (i < (nelem * elsize))
-	{
-		pointer[i] = 0;
-		i++;
-	}
-	return (pointer);
+	result = malloc (nmemb * size);
+	if (!result)
+		return (NULL);
+	ft_bzero(result, nmemb * size);
+	return (result);
 }
