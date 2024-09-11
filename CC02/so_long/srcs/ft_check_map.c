@@ -7,32 +7,25 @@ int	is_ber_file(char *str)
 	len = ft_strlen(str);
 	if (len < 4)
 		return (0);
-	return (str[len - 4] == '.' &&
-			str[len - 3] == 'b' &&
-			str[len - 2] == 'e' &&
-			str[len - 1] == 'r');
+	return (str[len - 4] == '.' && str[len - 3] == 'b' && str[len - 2] == 'e' && str[len - 1] == 'r');
 }
 
-void ft_exit2(int *line_lengths, char *str)
+void	ft_exit2(int *line_lengths, char *str)
 {
 	if (line_lengths)
 		free(line_lengths);	
 	ft_error(str);
 	exit(1);
 }
-
-void	map_info(char *filename, int **line_lengths, int *line_count)
+int	open_and_count_lines(char *filename, int *line_count)
 {
 	int		fd;
-	int		length;
-	int		count;
 	char	buffer;
-	int		current_line;
+	int		count;
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		ft_exit2(0, "Error\n File is incorrect\n");
-	length = 0;
+		ft_exit2(0, "Error\nFile is incorrect\n");
 	count = 0;
 	while (read(fd, &buffer, 1) > 0)
 	{
@@ -41,24 +34,42 @@ void	map_info(char *filename, int **line_lengths, int *line_count)
 	}
 	close(fd);
 	*line_count = count;
-	*line_lengths = malloc(sizeof(int) * count);
-	if (!*line_lengths)
-		ft_exit2(0, "Error\n Can't allocate  memory.\n");
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		ft_exit2(*line_lengths, "Error\n Can't open file.\n");
+	return (fd);
+}
+
+void	allocate_lengths(int fd, int *line_lengths)
+{
+	char	buffer;
+	int		length;
+	int		current_line;
+
+	length = 0;
 	current_line = 0;
-	while (read(fd, &buffer, 1) > 0) 
+	while (read(fd, &buffer, 1) > 0)
 	{
-		if (buffer == '\n') 
+		if (buffer == '\n')
 		{
-			(*line_lengths)[current_line++] = length;
+			line_lengths[current_line++] = length;
 			length = 0;
-		} 
-		else 
+		}
+		else
 			length++;
 	}
 	close(fd);
+}
+
+void	map_info(char *filename, int **line_lengths, int *line_count)
+{
+	int	fd;
+
+	fd = open_and_count_lines(filename, line_count);
+	*line_lengths = malloc(sizeof(int) * (*line_count));
+	if (!*line_lengths)
+		ft_exit2(0, "Error\nCan't allocate memory.\n");
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		ft_exit2(*line_lengths, "Error\nCan't open file.\n");
+	allocate_lengths(fd, *line_lengths);
 }
 
 char **get_map(char *filename, int *rows)
