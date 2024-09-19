@@ -12,6 +12,9 @@ SRCFILES = $(wildcard $(SRCDIR)/*.c)
 OBJFILES = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCFILES))
 NAME = pipex
 
+# Default target (build the program)
+all: $(NAME)
+
 # Make sure object directory exists
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)
